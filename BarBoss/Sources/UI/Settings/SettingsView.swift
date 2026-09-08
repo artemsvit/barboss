@@ -6,24 +6,19 @@ public struct SettingsView: View {
     
     public var body: some View {
         TabView {
+            ItemManagerView()
+                .tabItem {
+                    Label("Menu Bar Items", systemImage: "square.split.2x1")
+                }
+            
             GeneralSettingsTab()
                 .tabItem {
                     Label("General", systemImage: "gearshape")
                 }
             
-            MenuBarSettingsTab()
-                .tabItem {
-                    Label("Menu Bar", systemImage: "menubar.rectangle")
-                }
-            
             HotkeysSettingsTab()
                 .tabItem {
                     Label("Hotkeys", systemImage: "keyboard")
-                }
-            
-            AppearanceSettingsTab()
-                .tabItem {
-                    Label("Appearance", systemImage: "paintbrush")
                 }
             
             UpdatesSettingsTab()
@@ -36,12 +31,12 @@ public struct SettingsView: View {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 520, height: 400)
+        .frame(width: 620, height: 420)
         .padding(10)
     }
 }
 
-// MARK: - 1. General Tab
+// MARK: - General Tab
 struct GeneralSettingsTab: View {
     @ObservedObject var prefs = Preferences.shared
     
@@ -57,7 +52,7 @@ struct GeneralSettingsTab: View {
                 Toggle("Hover to reveal hidden items", isOn: $prefs.hoverToReveal)
                     .help("Move mouse cursor to the menu bar to automatically reveal items.")
             } header: {
-                Text("Startup & Behavior").font(.headline)
+                Text("Startup and Behavior").font(.headline)
             }
             
             Section {
@@ -79,86 +74,7 @@ struct GeneralSettingsTab: View {
     }
 }
 
-// MARK: - 2. Menu Bar Tab
-struct MenuBarSettingsTab: View {
-    @ObservedObject var prefs = Preferences.shared
-    
-    var body: some View {
-        Form {
-            Section {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 8) {
-                        Image(systemName: "command")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.accentColor)
-                            .padding(6)
-                            .background(Color.accentColor.opacity(0.12))
-                            .clipShape(RoundedRectangle(cornerRadius: 6))
-                        Text("How to Hide Menu Bar Icons")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack(alignment: .top, spacing: 8) {
-                            Text("1.").fontWeight(.bold).foregroundColor(.accentColor)
-                            Text("Hold the Command (⌘) key on your keyboard.")
-                        }
-                        HStack(alignment: .top, spacing: 8) {
-                            Text("2.").fontWeight(.bold).foregroundColor(.accentColor)
-                            Text("Click and drag any menu bar icon to the LEFT of the separator ( | ).")
-                        }
-                        HStack(alignment: .top, spacing: 8) {
-                            Text("3.").fontWeight(.bold).foregroundColor(.accentColor)
-                            Text("Click the BarBoss icon (🕶️) or press ⌘⇧B to collapse or reveal!")
-                        }
-                    }
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                }
-                .padding(.vertical, 4)
-            } header: {
-                Text("How to Hide Icons").font(.headline)
-            }
-            
-            Section {
-                Picker("Hiding Method:", selection: $prefs.hideMode) {
-                    ForEach(HideMode.allCases) { mode in
-                        VStack(alignment: .leading) {
-                            Text(mode.title).font(.body)
-                        }
-                        .tag(mode)
-                    }
-                }
-                .pickerStyle(.radioGroup)
-                
-                Text(prefs.hideMode.description)
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                    .padding(.leading, 20)
-            } header: {
-                Text("Display Mode").font(.headline)
-            }
-            
-            Section {
-                Picker("Separator Symbol:", selection: $prefs.separatorStyle) {
-                    ForEach(SeparatorStyle.allCases) { style in
-                        Text("\(style.symbol)  \(style.title)").tag(style)
-                    }
-                }
-                .pickerStyle(.menu)
-                
-                Toggle("Enable Always-Hidden section (‖)", isOn: $prefs.showAlwaysHiddenSection)
-                    .help("Adds a second separator for items you want permanently hidden.")
-            } header: {
-                Text("Separators").font(.headline)
-            }
-        }
-        .formStyle(.grouped)
-    }
-}
-
-// MARK: - 3. Hotkeys Tab
+// MARK: - Hotkeys Tab
 struct HotkeysSettingsTab: View {
     @ObservedObject var prefs = Preferences.shared
     
@@ -168,7 +84,7 @@ struct HotkeysSettingsTab: View {
                 HStack {
                     Text("Toggle Hidden Items:")
                     Spacer()
-                    Text("⌘ + ⇧ + B")
+                    Text("Command + Shift + B")
                         .font(.system(.body, design: .monospaced))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 4)
@@ -187,56 +103,7 @@ struct HotkeysSettingsTab: View {
     }
 }
 
-// MARK: - 4. Appearance Tab
-struct AppearanceSettingsTab: View {
-    @ObservedObject var prefs = Preferences.shared
-    
-    var body: some View {
-        Form {
-            Section {
-                Picker("Menu Bar Icon:", selection: $prefs.menuBarIconStyle) {
-                    ForEach(MenuBarIconStyle.allCases) { style in
-                        Label(style.title, systemImage: style.systemImageName)
-                            .tag(style)
-                    }
-                }
-                .pickerStyle(.radioGroup)
-            } header: {
-                Text("BarBoss Icon Style").font(.headline)
-            }
-            
-            Section {
-                HStack(spacing: 20) {
-                    VStack {
-                        Image(systemName: prefs.menuBarIconStyle.systemImageName)
-                            .font(.system(size: 24))
-                            .frame(width: 50, height: 50)
-                            .background(Color.secondary.opacity(0.1))
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                        Text("Active Icon")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Live Preview")
-                            .font(.subheadline)
-                            .fontWeight(.medium)
-                        Text("This icon appears in your macOS menu bar.")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.vertical, 4)
-            } header: {
-                Text("Preview").font(.headline)
-            }
-        }
-        .formStyle(.grouped)
-    }
-}
-
-// MARK: - 5. Updates Tab (Sparkle)
+// MARK: - Updates Tab (Sparkle)
 struct UpdatesSettingsTab: View {
     @ObservedObject var updateManager = UpdateManager.shared
     
@@ -290,7 +157,7 @@ struct UpdatesSettingsTab: View {
     }
 }
 
-// MARK: - 6. About Tab
+// MARK: - About Tab
 struct AboutSettingsTab: View {
     var body: some View {
         VStack(spacing: 16) {
@@ -319,7 +186,7 @@ struct AboutSettingsTab: View {
                     .foregroundColor(.secondary)
             }
             
-            Text("The powerful, modern menu bar manager for macOS.\nOrganize, combine, and take control of your top bar icons.")
+            Text("The minimal menu bar manager for macOS.\nOrganize, combine, and take control of your top bar icons.")
                 .font(.body)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
@@ -329,7 +196,7 @@ struct AboutSettingsTab: View {
                 .padding(.horizontal, 40)
             
             HStack(spacing: 20) {
-                Link("Documentation", destination: URL(string: "https://barboss.app")!)
+                Link("Documentation", destination: URL(string: "https://barboss.artsvit.com")!)
                     .font(.subheadline)
                 
                 Text("•").foregroundColor(.secondary)

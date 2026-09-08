@@ -2,50 +2,30 @@ import SwiftUI
 import ServiceManagement
 
 public enum HideMode: String, CaseIterable, Identifiable {
-    case inline = "inline"
     case floatingBar = "floatingBar"
+    case inline = "inline"
     
     public var id: String { rawValue }
     public var title: String {
         switch self {
+        case .floatingBar: return "BarBoss Bar"
         case .inline: return "Inline Menu Bar"
-        case .floatingBar: return "BarBoss Bar (Floating)"
         }
     }
     public var description: String {
         switch self {
+        case .floatingBar: return "Displays hidden items in a sleek secondary bar beneath the menu bar."
         case .inline: return "Collapses and expands items directly in the top menu bar."
-        case .floatingBar: return "Shows hidden items in a sleek secondary bar beneath the menu bar."
         }
     }
 }
 
 public enum MenuBarIconStyle: String, CaseIterable, Identifiable {
-    case pug = "pug"
-    case bowtie = "bowtie"
-    case martini = "martini"
-    case bars = "bars"
-    case dot = "dot"
+    case glasses = "glasses"
     
     public var id: String { rawValue }
-    public var title: String {
-        switch self {
-        case .pug: return "BarBoss Pug 🕶️"
-        case .bowtie: return "Classic Bowtie"
-        case .martini: return "Cocktail Glass"
-        case .bars: return "Dynamic Bars"
-        case .dot: return "Minimal Dot"
-        }
-    }
-    public var systemImageName: String {
-        switch self {
-        case .pug: return "sunglasses.fill"
-        case .bowtie: return "suit.diamond.fill"
-        case .martini: return "wineglass.fill"
-        case .bars: return "line.3.horizontal.decrease.circle"
-        case .dot: return "circle.fill"
-        }
-    }
+    public var title: String { "BarBoss Glasses" }
+    public var systemImageName: String { "sunglasses.fill" }
 }
 
 public enum SeparatorStyle: String, CaseIterable, Identifiable {
@@ -58,9 +38,9 @@ public enum SeparatorStyle: String, CaseIterable, Identifiable {
     public var title: String {
         switch self {
         case .pipe: return "Vertical Bar (|)"
-        case .chevron: return "Chevron (›)"
-        case .dot: return "Bullet (•)"
-        case .slash: return "Slash (/)"
+        case .chevron: return "Chevron"
+        case .dot: return "Bullet"
+        case .slash: return "Slash"
         }
     }
     public var symbol: String {
@@ -89,6 +69,7 @@ public final class Preferences: ObservableObject {
         static let separatorStyle = "BarBoss_separatorStyle"
         static let hotkeyModifiers = "BarBoss_hotkeyModifiers"
         static let hotkeyKeyCode = "BarBoss_hotkeyKeyCode"
+        static let hiddenItemIdentifiers = "BarBoss_hiddenItemIdentifiers"
         static let sparkleAutoCheck = "SUEnableAutomaticChecks"
         static let sparkleAutoDownload = "SUAutomaticallyUpdate"
     }
@@ -133,23 +114,26 @@ public final class Preferences: ObservableObject {
         didSet { defaults.set(hotkeyKeyCode, forKey: Keys.hotkeyKeyCode) }
     }
     
+    @Published public var hiddenItemIdentifiers: [String] {
+        didSet { defaults.set(hiddenItemIdentifiers, forKey: Keys.hiddenItemIdentifiers) }
+    }
+    
     @Published public var launchAtLogin: Bool = false {
         didSet { setLaunchAtLogin(launchAtLogin) }
     }
     
     private init() {
-        self.isHidden = defaults.object(forKey: Keys.isHidden) != nil ? defaults.bool(forKey: Keys.isHidden) : true
+        self.isHidden = defaults.object(forKey: Keys.isHidden) != nil ? defaults.bool(forKey: Keys.isHidden) : false
         
-        let savedHideMode = defaults.string(forKey: Keys.hideMode) ?? HideMode.inline.rawValue
-        self.hideMode = HideMode(rawValue: savedHideMode) ?? .inline
+        let savedHideMode = defaults.string(forKey: Keys.hideMode) ?? HideMode.floatingBar.rawValue
+        self.hideMode = HideMode(rawValue: savedHideMode) ?? .floatingBar
         
         self.autoHideDelay = defaults.object(forKey: Keys.autoHideDelay) != nil ? defaults.double(forKey: Keys.autoHideDelay) : 5.0
         self.hideOnClickOutside = defaults.object(forKey: Keys.hideOnClickOutside) != nil ? defaults.bool(forKey: Keys.hideOnClickOutside) : true
         self.hoverToReveal = defaults.bool(forKey: Keys.hoverToReveal)
         self.showAlwaysHiddenSection = defaults.bool(forKey: Keys.showAlwaysHiddenSection)
         
-        let savedIconStyle = defaults.string(forKey: Keys.menuBarIconStyle) ?? MenuBarIconStyle.pug.rawValue
-        self.menuBarIconStyle = MenuBarIconStyle(rawValue: savedIconStyle) ?? .pug
+        self.menuBarIconStyle = .glasses
         
         let savedSeparatorStyle = defaults.string(forKey: Keys.separatorStyle) ?? SeparatorStyle.pipe.rawValue
         self.separatorStyle = SeparatorStyle(rawValue: savedSeparatorStyle) ?? .pipe
@@ -158,7 +142,31 @@ public final class Preferences: ObservableObject {
         self.hotkeyModifiers = defaults.object(forKey: Keys.hotkeyModifiers) != nil ? UInt(defaults.integer(forKey: Keys.hotkeyModifiers)) : (NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
         self.hotkeyKeyCode = defaults.object(forKey: Keys.hotkeyKeyCode) != nil ? UInt16(defaults.integer(forKey: Keys.hotkeyKeyCode)) : 11
         
+        self.hiddenItemIdentifiers = defaults.stringArray(forKey: Keys.hiddenItemIdentifiers) ?? []
+        
         self.launchAtLogin = SMAppService.mainApp.status == .enabled
+    }
+    
+    public func isItemHidden(_ id: String) -> Bool {
+        hiddenItemIdentifiers.contains(id)
+    }
+    
+    public func toggleItemHidden(_ id: String) {
+        if isItemHidden(id) {
+            hiddenItemIdentifiers.removeAll { $0 == id }
+        } else {
+            hiddenItemIdentifiers.append(id)
+        }
+    }
+    
+    public func hideItem(_ id: String) {
+        if !hiddenItemIdentifiers.contains(id) {
+            hiddenItemIdentifiers.append(id)
+        }
+    }
+    
+    public func showItem(_ id: String) {
+        hiddenItemIdentifiers.removeAll { $0 == id }
     }
     
     private func setLaunchAtLogin(_ enable: Bool) {

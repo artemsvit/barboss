@@ -10,6 +10,7 @@
 		0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D07B175BB86BA2837FC251C /* HoverManager.swift */; };
 		22E1848806CB51A90E15C14E /* FloatingBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */; };
 		37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D0050C4337E04D5E9FA5C /* SettingsView.swift */; };
+		3D888FBA0C412ED6EAA54278 /* MenuBarItemScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */; };
 		4FAB9B7421F1E4C5D686F06D /* BarBossApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B751EFE760678A1B2D5143CA /* BarBossApp.swift */; };
 		6592B0FEBFDB0339B94B725F /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */; };
 		743CD257F6DA709CDD4BC73E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F674FD5192FE657B75B3224 /* Preferences.swift */; };
@@ -17,6 +18,7 @@
 		94A59455C93EE6BAE646521A /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = D439C0B4648D26FEAB5CD81F /* Sparkle */; };
 		98B935F4B90CF70E991D6048 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888B59B69CA10757E7CD6B7E /* UpdateManager.swift */; };
 		AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */; };
+		B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53577315E8F719E5ED5B48DA /* ItemManagerView.swift */; };
 		D3B21A8D12D409B4AFB6EEF8 /* FloatingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */; };
 		F67918E3E103F35BA6BBBAFB /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */; };
 		FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C548DD91941A1707AC940D6C /* MenuBarManager.swift */; };
@@ -26,6 +28,7 @@
 		128B483420AEEE8B168A9502 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F674FD5192FE657B75B3224 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		53577315E8F719E5ED5B48DA /* ItemManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemManagerView.swift; sourceTree = "<group>"; };
 		5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		650D0050C4337E04D5E9FA5C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		67438F5AF6680A9E39AABEFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -36,6 +39,7 @@
 		A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarView.swift; sourceTree = "<group>"; };
 		B751EFE760678A1B2D5143CA /* BarBossApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarBossApp.swift; sourceTree = "<group>"; };
 		C548DD91941A1707AC940D6C /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
+		F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemScanner.swift; sourceTree = "<group>"; };
 		F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarController.swift; sourceTree = "<group>"; };
 		FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -63,6 +67,7 @@
 		276CC2493779F498F70CC25B /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				53577315E8F719E5ED5B48DA /* ItemManagerView.swift */,
 				650D0050C4337E04D5E9FA5C /* SettingsView.swift */,
 				5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */,
 			);
@@ -83,6 +88,7 @@
 				F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */,
 				FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */,
 				9D07B175BB86BA2837FC251C /* HoverManager.swift */,
+				F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */,
 				C548DD91941A1707AC940D6C /* MenuBarManager.swift */,
 				1F674FD5192FE657B75B3224 /* Preferences.swift */,
 			);
@@ -217,6 +223,8 @@
 				D3B21A8D12D409B4AFB6EEF8 /* FloatingBarView.swift in Sources */,
 				AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */,
 				0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */,
+				B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */,
+				3D888FBA0C412ED6EAA54278 /* MenuBarItemScanner.swift in Sources */,
 				FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */,
 				743CD257F6DA709CDD4BC73E /* Preferences.swift in Sources */,
 				37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */,

@@ -34,7 +34,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             button.target = self
             button.action = #selector(handlePrimaryItemClick(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            button.toolTip = "BarBoss (Click to toggle hidden items, Right-click for menu)"
+            button.toolTip = "BarBoss Glasses (Click to open BarBoss Bar, Right-click for menu)"
         }
         
         // 2. Hidden separator item
@@ -44,7 +44,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         if let sepButton = hiddenSeparatorItem.button {
             sepButton.target = self
             sepButton.action = #selector(handleSeparatorClick(_:))
-            sepButton.toolTip = "BarBoss Separator (⌘-drag icons to the left of this separator)"
+            sepButton.toolTip = "BarBoss Separator"
         }
         
         // 3. Always hidden separator item (if enabled)
@@ -59,7 +59,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             alwaysHiddenSeparatorItem?.autosaveName = "BarBoss_AlwaysHiddenSeparator"
             if let button = alwaysHiddenSeparatorItem?.button {
                 button.title = "‖"
-                button.toolTip = "BarBoss Always Hidden (Items to the left stay hidden)"
+                button.toolTip = "BarBoss Always Hidden"
             }
         }
     }
@@ -74,10 +74,10 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             }
             .store(in: &cancellables)
         
-        prefs.$menuBarIconStyle
+        prefs.$hideMode
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.updatePrimaryButtonAppearance()
+                self?.updateItemStates()
             }
             .store(in: &cancellables)
         
@@ -109,20 +109,19 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             return
         }
         
-        // Left click toggles based on mode
+        // Left click toggles BarBoss Bar or inline hiding
         let prefs = Preferences.shared
         switch prefs.hideMode {
-        case .inline:
-            toggleHiddenItems()
         case .floatingBar:
             FloatingBarController.shared.toggle(relativeTo: sender) { [weak self] in
                 self?.onOpenSettings?()
             }
+        case .inline:
+            toggleHiddenItems()
         }
     }
     
     @objc private func handleSeparatorClick(_ sender: NSStatusBarButton) {
-        // Clicking separator collapses hidden items back
         if !Preferences.shared.isHidden {
             toggleHiddenItems()
         }
@@ -131,6 +130,12 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     public func toggleHiddenItems() {
         let prefs = Preferences.shared
         prefs.isHidden.toggle()
+        
+        if prefs.hideMode == .floatingBar {
+            FloatingBarController.shared.toggle(relativeTo: primaryStatusItem.button) { [weak self] in
+                self?.onOpenSettings?()
+            }
+        }
         
         if !prefs.isHidden && prefs.autoHideDelay > 0 {
             startAutoHideTimer()
@@ -160,18 +165,16 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         
         if hideMode == .inline {
             if isHidden {
-                // Collapsed: Separator pushes items out of the visible area
-                hiddenSeparatorItem.length = 10000
+                hiddenSeparatorItem.length = 0
                 hiddenSeparatorItem.button?.title = ""
             } else {
-                // Expanded: Normal width, showing separator glyph
                 hiddenSeparatorItem.length = NSStatusItem.variableLength
                 hiddenSeparatorItem.button?.title = " " + Preferences.shared.separatorStyle.symbol + " "
             }
         } else {
-            // In floating bar mode, separator is compact
-            hiddenSeparatorItem.length = NSStatusItem.variableLength
-            hiddenSeparatorItem.button?.title = " " + Preferences.shared.separatorStyle.symbol + " "
+            // In floating bar mode, separator is not used
+            hiddenSeparatorItem.length = 0
+            hiddenSeparatorItem.button?.title = ""
         }
     }
     
@@ -179,24 +182,10 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         guard let button = primaryStatusItem?.button else { return }
         
         let isHidden = Preferences.shared.isHidden
-        let style = Preferences.shared.menuBarIconStyle
-        
-        let symbolName: String
-        switch style {
-        case .pug:
-            symbolName = isHidden ? "sunglasses" : "sunglasses.fill"
-        case .bowtie:
-            symbolName = isHidden ? "suit.diamond" : "suit.diamond.fill"
-        case .martini:
-            symbolName = isHidden ? "wineglass" : "wineglass.fill"
-        case .bars:
-            symbolName = isHidden ? "line.3.horizontal" : "line.3.horizontal.decrease.circle.fill"
-        case .dot:
-            symbolName = isHidden ? "circle" : "circle.fill"
-        }
+        let symbolName = isHidden ? "sunglasses" : "sunglasses.fill"
         
         let config = NSImage.SymbolConfiguration(pointSize: 14, weight: .medium)
-        if let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "BarBoss")?.withSymbolConfiguration(config) {
+        if let image = NSImage(systemSymbolName: symbolName, accessibilityDescription: "BarBoss Glasses")?.withSymbolConfiguration(config) {
             image.isTemplate = true
             button.image = image
             button.imagePosition = .imageOnly
@@ -206,7 +195,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     private func updateSeparatorAppearance() {
         guard let sepButton = hiddenSeparatorItem?.button else { return }
         let isHidden = Preferences.shared.isHidden
-        if !isHidden {
+        if !isHidden && Preferences.shared.hideMode == .inline {
             sepButton.title = " " + Preferences.shared.separatorStyle.symbol + " "
         }
     }
@@ -232,18 +221,16 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         let menu = NSMenu()
         menu.delegate = self
         
-        let isHidden = Preferences.shared.isHidden
+        // 1. Open BarBoss Bar
+        let barItem = NSMenuItem(title: "BarBoss Bar", action: #selector(contextShowFloatingBar), keyEquivalent: "")
+        barItem.target = self
+        menu.addItem(barItem)
         
-        // 1. Toggle Item
-        let toggleTitle = isHidden ? "Show Hidden Items" : "Hide Hidden Items"
+        // 2. Toggle Items
+        let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
         let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
         toggleItem.target = self
         menu.addItem(toggleItem)
-        
-        // 2. Open BarBoss Bar
-        let barItem = NSMenuItem(title: "Show BarBoss Bar", action: #selector(contextShowFloatingBar), keyEquivalent: "")
-        barItem.target = self
-        menu.addItem(barItem)
         
         menu.addItem(NSMenuItem.separator())
         
