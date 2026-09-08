@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode / Build Artifacts
+build/
+DerivedData/
+*.xcworkspace
+*.xcuserdatad
+xcuserdata/
+*.moved-aside
+*.ipa
+*.app.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Cloudflare / Node
+node_modules/
+.wrangler/
+dist/

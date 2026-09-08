@@ -1,0 +1,35 @@
+name: BarBoss
+options:
+  bundleIdPrefix: com.barboss
+  deploymentTarget:
+    macOS: "14.0"
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: 2.6.0
+targets:
+  BarBoss:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: BarBoss/Sources
+      - path: BarBoss/Resources
+    dependencies:
+      - package: Sparkle
+        product: Sparkle
+    info:
+      path: BarBoss/Resources/Info.plist
+    entitlements:
+      path: BarBoss/Resources/BarBoss.entitlements
+    settings:
+      PRODUCT_NAME: BarBoss
+      PRODUCT_BUNDLE_IDENTIFIER: com.barboss.app
+      MARKETING_VERSION: "1.0.0"
+      CURRENT_PROJECT_VERSION: "1"
+      ENABLE_HARDENED_RUNTIME: YES
+      GENERATE_INFOPLIST_FILE: NO
+      SWIFT_VERSION: "5.9"
+      MACOSX_DEPLOYMENT_TARGET: "14.0"
+      COMBINE_HIDPI_IMAGES: YES
+      ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
