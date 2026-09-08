@@ -258,10 +258,20 @@ struct UpdatesSettingsTab: View {
 struct AboutSettingsTab: View {
     var body: some View {
         VStack(spacing: 16) {
-            Image(systemName: "suit.diamond.fill")
-                .font(.system(size: 48))
-                .foregroundStyle(.linearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .padding(.top, 10)
+            if let icon = NSApp.applicationIconImage {
+                Image(nsImage: icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 72, height: 72)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+                    .padding(.top, 10)
+            } else {
+                Image(systemName: "sunglasses.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.linearGradient(colors: [.yellow, .orange], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .padding(.top, 10)
+            }
             
             VStack(spacing: 4) {
                 Text("BarBoss")

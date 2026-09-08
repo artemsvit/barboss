@@ -21,6 +21,7 @@ public enum HideMode: String, CaseIterable, Identifiable {
 }
 
 public enum MenuBarIconStyle: String, CaseIterable, Identifiable {
+    case pug = "pug"
     case bowtie = "bowtie"
     case martini = "martini"
     case bars = "bars"
@@ -29,6 +30,7 @@ public enum MenuBarIconStyle: String, CaseIterable, Identifiable {
     public var id: String { rawValue }
     public var title: String {
         switch self {
+        case .pug: return "BarBoss Pug 🕶️"
         case .bowtie: return "Classic Bowtie"
         case .martini: return "Cocktail Glass"
         case .bars: return "Dynamic Bars"
@@ -37,6 +39,7 @@ public enum MenuBarIconStyle: String, CaseIterable, Identifiable {
     }
     public var systemImageName: String {
         switch self {
+        case .pug: return "sunglasses.fill"
         case .bowtie: return "suit.diamond.fill"
         case .martini: return "wineglass.fill"
         case .bars: return "line.3.horizontal.decrease.circle"
@@ -145,8 +148,8 @@ public final class Preferences: ObservableObject {
         self.hoverToReveal = defaults.bool(forKey: Keys.hoverToReveal)
         self.showAlwaysHiddenSection = defaults.bool(forKey: Keys.showAlwaysHiddenSection)
         
-        let savedIconStyle = defaults.string(forKey: Keys.menuBarIconStyle) ?? MenuBarIconStyle.bowtie.rawValue
-        self.menuBarIconStyle = MenuBarIconStyle(rawValue: savedIconStyle) ?? .bowtie
+        let savedIconStyle = defaults.string(forKey: Keys.menuBarIconStyle) ?? MenuBarIconStyle.pug.rawValue
+        self.menuBarIconStyle = MenuBarIconStyle(rawValue: savedIconStyle) ?? .pug
         
         let savedSeparatorStyle = defaults.string(forKey: Keys.separatorStyle) ?? SeparatorStyle.pipe.rawValue
         self.separatorStyle = SeparatorStyle(rawValue: savedSeparatorStyle) ?? .pipe

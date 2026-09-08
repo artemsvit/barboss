@@ -183,6 +183,8 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         
         let symbolName: String
         switch style {
+        case .pug:
+            symbolName = isHidden ? "sunglasses" : "sunglasses.fill"
         case .bowtie:
             symbolName = isHidden ? "suit.diamond" : "suit.diamond.fill"
         case .martini:
