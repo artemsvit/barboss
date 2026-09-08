@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarBoss — The Ultimate macOS Menu Bar Manager</title>
+  <meta name="description" content="Combine, organize, and hide your top bar icons with lightning speed. Designed for macOS Sonoma, Sequoia, and beyond.">
+  <link rel="icon" type="image/png" href="appicon.png">
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background lighting */
+    .glow-top {
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 600px;
+      background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.18) 0%, rgba(139, 92, 246, 0.08) 45%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(9, 10, 15, 0.75);
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-brand img {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+    }
+
+    .btn-nav {
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 8px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .btn-nav:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      z-index: 1;
+      padding: 160px 24px 80px;
+      text-align: center;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      color: #60a5fa;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+
+    .hero-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 22px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 50px rgba(59, 130, 246, 0.4);
+      margin: 0 auto 24px;
+      display: block;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto 36px;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      color: #090a0f;
+      font-weight: 600;
+      font-size: 1.05rem;
+      padding: 14px 32px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #e5e7eb;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-weight: 500;
+      font-size: 1.05rem;
+      padding: 14px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .hero-meta {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+    }
+
+    /* Menu Bar Preview Mockup */
+    .preview-container {
+      max-width: 1000px;
+      margin: 40px auto 100px;
+      padding: 0 24px;
+    }
+
+    .mockup-window {
+      background: rgba(20, 24, 33, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+    }
+
+    /* Virtual macOS Top Bar */
+    .mock-menu-bar {
+      height: 38px;
+      background: rgba(15, 17, 26, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .mock-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: var(--text-muted);
+    }
+
+    .apple-logo {
+      font-size: 1rem;
+      color: #fff;
+    }
+
+    .mock-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .mock-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .mock-item:hover, .mock-item.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+    }
+
+    .mock-separator {
+      color: #60a5fa;
+      font-weight: bold;
+      padding: 0 2px;
+    }
+
+    .mock-notch {
+      width: 130px;
+      height: 24px;
+      background: #000;
+      border-radius: 0 0 12px 12px;
+      margin: 0 auto;
+    }
+
+    /* Mock Screen Canvas */
+    .mock-canvas {
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Floating Bar Display */
+    .floating-bar-preview {
+      background: rgba(30, 36, 50, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 14px;
+      padding: 12px 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      animation: floatPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes floatPulse {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .floating-tool {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .floating-tool .icon-box {
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+
+    /* Features Grid */
+    .features {
+      max-width: 1100px;
+      margin: 0 auto 120px;
+      padding: 0 24px;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 32px 28px;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .feature-card:hover {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-4px);
+    }
+
+    .card-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 130, 246, 0.12);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #60a5fa;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+    }
+
+    /* Sparkle Updates Section */
+    .sparkle-section {
+      max-width: 1000px;
+      margin: 0 auto 120px;
+      padding: 40px;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.06) 0%, rgba(139, 92, 246, 0.06) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    @media (max-width: 768px) {
+      .sparkle-section {
+        grid-template-columns: 1fr;
+        padding: 28px;
+      }
+    }
+
+    .sparkle-content h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .sparkle-content p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 1rem;
+    }
+
+    .sparkle-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      font-family: monospace;
+      font-size: 0.88rem;
+      color: #93c5fd;
+    }
+
+    /* CTA Section */
+    .cta-banner {
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto 140px;
+      padding: 60px 24px;
+      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.12), transparent 70%);
+    }
+
+    .cta-banner h2 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+    }
+
+    .cta-banner p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      margin-bottom: 32px;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 40px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-top"></div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#" class="nav-brand">
+      <img src="appicon.png" alt="BarBoss">
+      <span>BarBoss</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#barboss-bar">BarBoss Bar</a>
+      <a href="#updates">Sparkle Updates</a>
+      <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
+      <a href="/BarBoss.dmg" class="btn-nav">Download</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="badge">✨ BarBoss 1.0 is here for macOS Sonoma & Sequoia</div>
+    <img src="appicon.png" alt="BarBoss Icon" class="hero-icon">
+    <h1>Take total control of your <span>Menu Bar</span>.</h1>
+    <p>
+      Combine, organize, and hide your top bar icons with lightning speed.
+      Declutter your workspace, bypass the MacBook notch, and access everything whenever you need it.
+    </p>
+
+    <div class="cta-group">
+      <a href="/BarBoss.dmg" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download BarBoss (DMG)
+      </a>
+      <a href="https://github.com/artemsvit/barboss" target="_blank" class="btn-secondary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+        GitHub Releases
+      </a>
+    </div>
+
+    <div class="hero-meta">
+      Requires macOS 14.0+ Sonoma or macOS 15+ Sequoia • Universal (Apple Silicon & Intel) • Free & Open Source
+    </div>
+  </section>
+
+  <!-- Interactive Mockup Preview -->
+  <div class="preview-container">
+    <div class="mockup-window">
+      <!-- Simulated Menu Bar -->
+      <div class="mock-menu-bar">
+        <div class="mock-left">
+          <span class="apple-logo"></span>
+          <span><b>BarBoss</b></span>
+          <span>File</span>
+          <span>Edit</span>
+          <span>View</span>
+          <span>Window</span>
+          <span>Help</span>
+        </div>
+        <div class="mock-notch"></div>
+        <div class="mock-right">
+          <!-- Hidden icons -->
+          <span class="mock-item">☁️ Dropbox</span>
+          <span class="mock-item">🎧 Spotify</span>
+          <span class="mock-item">☕️ Amphetamine</span>
+          <!-- BarBoss Separator -->
+          <span class="mock-separator">|</span>
+          <!-- BarBoss Main Button -->
+          <span class="mock-item active" title="BarBoss Toggle">🍸</span>
+          <!-- Always visible icons -->
+          <span class="mock-item">📶</span>
+          <span class="mock-item">🔋 98%</span>
+          <span class="mock-item">Tue 11:15</span>
+        </div>
+      </div>
+
+      <!-- Canvas displaying BarBoss Bar -->
+      <div class="mock-canvas">
+        <div class="floating-bar-preview">
+          <div class="floating-tool">
+            <div class="icon-box">🔍</div>
+            <span>Search</span>
+          </div>
+          <div class="floating-tool">
+            <div class="icon-box">📶</div>
+            <span>Network</span>
+          </div>
+          <div class="floating-tool">
+            <div class="icon-box">🔋</div>
+            <span>Power</span>
+          </div>
+          <div class="floating-tool">
+            <div class="icon-box">🔊</div>
+            <span>Sound</span>
+          </div>
+          <div class="floating-tool">
+            <div class="icon-box">🌙</div>
+            <span>Focus</span>
+          </div>
+          <div class="floating-tool">
+            <div class="icon-box">⚙️</div>
+            <span>Settings</span>
+          </div>
+        </div>
+        <p style="margin-top: 24px; color: var(--text-dim); font-size: 0.88rem;">
+          ✨ BarBoss Bar: Smooth secondary tray directly below the MacBook notch
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Grid -->
+  <section id="features" class="features">
+    <div class="section-header">
+      <h2>Everything in your Menu Bar. Perfected.</h2>
+      <p>A full toolkit designed to keep your macOS workspace clean, uncluttered, and efficient.</p>
+    </div>
+
+    <div class="grid-3">
+      <div class="feature-card">
+        <div class="card-icon">⚡️</div>
+        <h3>Inline Collapsing</h3>
+        <p>Hold ⌘ and drag any app icons behind the BarBoss separator. Click or hover to expand and collapse instantly.</p>
+      </div>
+
+      <div class="feature-card" id="barboss-bar">
+        <div class="card-icon">🍸</div>
+        <h3>BarBoss Floating Bar</h3>
+        <p>Display your hidden tools in a gorgeous secondary frosted-glass tray beneath the menu bar when space gets tight.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">⌨️</div>
+        <h3>Global Hotkey</h3>
+        <p>Toggle your hidden icons instantly from anywhere with <code>⌘ + Shift + B</code>, or reveal on mouse hover.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">💻</div>
+        <h3>Notch Friendly</h3>
+        <p>Designed for MacBooks with a camera notch. Access icons that would otherwise be blocked or lost from view.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">🔒</div>
+        <h3>Always-Hidden Section</h3>
+        <p>Have menu items you never need to see? Tuck them behind the secondary divider (<code>‖</code>) for permanent concealment.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="card-icon">🪶</div>
+        <h3>Zero Clutter Architecture</h3>
+        <p>Runs purely as an accessory utility with no Dock footprint, zero telemetry, and native Swift performance.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sparkle Updates Section -->
+  <section id="updates" class="sparkle-section">
+    <div class="sparkle-content">
+      <h2>Seamless Update Management</h2>
+      <p>
+        BarBoss integrates the trusted <b>Sparkle 2 framework</b> for automated update checks, background downloading, and effortless 1-click upgrades.
+      </p>
+      <div class="cta-group" style="justify-content: flex-start; margin-bottom: 0;">
+        <a href="https://sparkle-project.org" target="_blank" class="btn-secondary" style="font-size: 0.95rem; padding: 10px 22px;">
+          Learn about Sparkle
+        </a>
+      </div>
+    </div>
+    <div class="sparkle-box">
+      <div>// Sparkle 2 Appcast Integration</div>
+      <div style="margin-top: 8px; color: #a7f3d0;">✓ EdDSA Cryptographic Signatures</div>
+      <div style="color: #a7f3d0;">✓ Automatic Background Checks</div>
+      <div style="color: #a7f3d0;">✓ Release Channel Switching</div>
+      <div style="color: #a7f3d0;">✓ Zero-Downtime Silent Updates</div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="cta-banner">
+    <h2>Ready to clean up your menu bar?</h2>
+    <p>Download BarBoss for macOS today and experience a clean, distraction-free top bar.</p>
+    <div class="cta-group">
+      <a href="/BarBoss.dmg" class="btn-primary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download BarBoss DMG
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      © 2026 BarBoss. Created for macOS.
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
+      <a href="https://github.com/artemsvit/barboss/releases" target="_blank">Releases</a>
+      <a href="https://sparkle-project.org" target="_blank">Sparkle</a>
+      <a href="http://barboss.artsvit.com">barboss.artsvit.com</a>
+    </div>
+  </footer>
+
+</body>
+</html>
