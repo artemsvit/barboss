@@ -6,21 +6,23 @@
     <description>Most recent updates to BarBoss.</description>
     <language>en</language>
     <item>
-      <title>BarBoss 1.0.0</title>
+      <title>BarBoss 1.0.2</title>
+      <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+      <pubDate>Tue, 08 Sep 2026 15:31:24 +0000</pubDate>
       <description><![CDATA[
-        <h2>BarBoss 1.0.0</h2>
-        <p>Initial release of BarBoss for macOS.</p>
+        <h2>BarBoss 1.0.2</h2>
+        <p>Sparkle updates now advertise this build, and the DMG installer shows a drag arrow into Applications.</p>
         <ul>
-          <li>Menu Bar icon hiding with draggable separator</li>
-          <li>BarBoss Bar floating secondary tray</li>
-          <li>Global shortcut ⌘⇧B and hover triggers</li>
+          <li>Sparkle feed now ships the current short version and build number</li>
+          <li>Updates are signed with the BarBoss EdDSA key</li>
+          <li>DMG window includes a clear arrow from BarBoss to Applications</li>
         </ul>
       ]]></description>
-      <pubDate>Tue, 08 Sep 2026 11:00:00 +0300</pubDate>
       <enclosure url="https://barboss.artsvit.com/BarBoss.dmg"
-                 sparkle:version="1"
-                 sparkle:shortVersionString="1.0.0"
-                 length="1300000"
+                 sparkle:version="3"
+                 sparkle:shortVersionString="1.0.2"
+                 sparkle:edSignature="z7S6diC8CzfLBrxJd7PA7OFVAE2NjUsVb9t/u2E+dE4mFnv/w0IZGbGKmm72mfPjeKX8d2cxtr+PLOaCWr9vAQ=="
+                 length="9034521"
                  type="application/octet-stream" />
     </item>
   </channel>

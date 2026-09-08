@@ -1,97 +1,161 @@
 import AppKit
 
-let width: CGFloat = 660 * 2
-let height: CGFloat = 400 * 2
-let size = NSSize(width: width, height: height)
+// Finder window is 660x400; draw @2x so the DMG stays sharp on Retina.
+let scale: CGFloat = 2
+let windowWidth: CGFloat = 660
+let windowHeight: CGFloat = 400
+let width = windowWidth * scale
+let height = windowHeight * scale
 
-let image = NSImage(size: size)
-image.lockFocus()
+guard let rep = NSBitmapImageRep(
+    bitmapDataPlanes: nil,
+    pixelsWide: Int(width),
+    pixelsHigh: Int(height),
+    bitsPerSample: 8,
+    samplesPerPixel: 4,
+    hasAlpha: true,
+    isPlanar: false,
+    colorSpaceName: .deviceRGB,
+    bytesPerRow: 0,
+    bitsPerPixel: 0
+) else {
+    fatalError("Failed to create bitmap")
+}
+rep.size = NSSize(width: width, height: height)
 
+let image = NSImage(size: NSSize(width: width, height: height))
+image.addRepresentation(rep)
+
+NSGraphicsContext.saveGraphicsState()
+NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
 let ctx = NSGraphicsContext.current!.cgContext
 
-// 1. User's requested Beige/Golden Gradient:
-// linear-gradient(180deg, #FFC757 0%, #DC8A32 100%)
+// Warm gold gradient — matches the BarBoss brand
 let topColor = NSColor(red: 255.0/255.0, green: 199.0/255.0, blue: 87.0/255.0, alpha: 1.0)
 let bottomColor = NSColor(red: 220.0/255.0, green: 138.0/255.0, blue: 50.0/255.0, alpha: 1.0)
-
 let bgRect = NSRect(x: 0, y: 0, width: width, height: height)
-let bgGradient = NSGradient(starting: topColor, ending: bottomColor)!
-// In Cocoa NSGradient, 270 angle draws top-to-bottom
-bgGradient.draw(in: bgRect, angle: 270)
+NSGradient(starting: topColor, ending: bottomColor)!.draw(in: bgRect, angle: 270)
 
-// 2. Subtle soft warm glow in center
+// Soft center glow
 let center = CGPoint(x: width / 2, y: height / 2)
 let glowColors = [
-    NSColor(white: 1.0, alpha: 0.18).cgColor,
+    NSColor(white: 1.0, alpha: 0.20).cgColor,
     NSColor.clear.cgColor
 ] as CFArray
-let colorSpace = CGColorSpaceCreateDeviceRGB()
-if let radialGrad = CGGradient(colorsSpace: colorSpace, colors: glowColors, locations: [0.0, 1.0]) {
+if let radialGrad = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: glowColors, locations: [0.0, 1.0]) {
     ctx.drawRadialGradient(radialGrad, startCenter: center, startRadius: 20, endCenter: center, endRadius: width * 0.45, options: [])
 }
 
-// 3. Arrow pointing from Left (BarBoss) to Right (Applications)
-// create-dmg coordinates are from top-left, Cocoa lockFocus is from bottom-left.
-// y=190 from top in 400px window -> y = 210 in Cocoa coordinates (x2 = 420)
-let arrowCenterY: CGFloat = 210 * 2
-let arrowStartX: CGFloat = 275 * 2
-let arrowEndX: CGFloat = 385 * 2
+// create-dmg icon positions are from the top-left of the 660x400 window.
+// Cocoa drawing is from the bottom-left of the @2x canvas.
+let iconCenterYFromTop: CGFloat = 190
+let leftIconX: CGFloat = 175
+let rightIconX: CGFloat = 485
+let iconCenterY = (windowHeight - iconCenterYFromTop) * scale
 
-// Arrow shadow
-let arrowShadow = NSShadow()
-arrowShadow.shadowColor = NSColor.black.withAlphaComponent(0.18)
-arrowShadow.shadowOffset = NSSize(width: 0, height: -3)
-arrowShadow.shadowBlurRadius = 8
-arrowShadow.set()
+// Pedestals under the app + Applications icons
+func pedestal(atX x: CGFloat) -> NSBezierPath {
+    let w: CGFloat = 168
+    let h: CGFloat = 18
+    return NSBezierPath(
+        roundedRect: NSRect(x: x * scale - w / 2, y: iconCenterY - 98, width: w, height: h),
+        xRadius: 9,
+        yRadius: 9
+    )
+}
+NSColor(red: 45.0/255.0, green: 26.0/255.0, blue: 8.0/255.0, alpha: 0.16).setFill()
+pedestal(atX: leftIconX).fill()
+pedestal(atX: rightIconX).fill()
 
-// Arrow path
-let arrowPath = NSBezierPath()
-// Arrow shaft
-arrowPath.move(to: NSPoint(x: arrowStartX, y: arrowCenterY))
-arrowPath.line(to: NSPoint(x: arrowEndX - 20, y: arrowCenterY))
+// Bold drag arrow from BarBoss.app → Applications
+let arrowStartX = (leftIconX + 78) * scale
+let arrowEndX = (rightIconX - 78) * scale
+let arrowY = iconCenterY
+let shaftThickness: CGFloat = 16
+let headLength: CGFloat = 36
+let headWidth: CGFloat = 46
 
-// Arrow head
-arrowPath.move(to: NSPoint(x: arrowEndX - 42, y: arrowCenterY + 22))
-arrowPath.line(to: NSPoint(x: arrowEndX, y: arrowCenterY))
-arrowPath.line(to: NSPoint(x: arrowEndX - 42, y: arrowCenterY - 22))
+let shaft = NSBezierPath(roundedRect: NSRect(
+    x: arrowStartX,
+    y: arrowY - shaftThickness / 2,
+    width: arrowEndX - arrowStartX - headLength + 8,
+    height: shaftThickness
+), xRadius: shaftThickness / 2, yRadius: shaftThickness / 2)
 
-let darkBrown = NSColor(red: 45.0/255.0, green: 26.0/255.0, blue: 8.0/255.0, alpha: 0.88)
-darkBrown.setStroke()
-arrowPath.lineWidth = 7.0
-arrowPath.lineCapStyle = .round
-arrowPath.lineJoinStyle = .round
-arrowPath.stroke()
+let head = NSBezierPath()
+head.move(to: NSPoint(x: arrowEndX, y: arrowY))
+head.line(to: NSPoint(x: arrowEndX - headLength, y: arrowY + headWidth / 2))
+head.line(to: NSPoint(x: arrowEndX - headLength, y: arrowY - headWidth / 2))
+head.close()
 
-// Reset shadow
-let noShadow = NSShadow()
-noShadow.set()
+let arrow = NSBezierPath()
+arrow.append(shaft)
+arrow.append(head)
 
-// 4. Subtle pedestals beneath icons
-let leftPedestal = NSBezierPath(roundedRect: NSRect(x: 175 * 2 - 80, y: arrowCenterY - 95, width: 160, height: 16), xRadius: 8, yRadius: 8)
-let rightPedestal = NSBezierPath(roundedRect: NSRect(x: 485 * 2 - 80, y: arrowCenterY - 95, width: 160, height: 16), xRadius: 8, yRadius: 8)
-NSColor(red: 45.0/255.0, green: 26.0/255.0, blue: 8.0/255.0, alpha: 0.12).setFill()
-leftPedestal.fill()
-rightPedestal.fill()
+ctx.saveGState()
+ctx.setShadow(offset: CGSize(width: 0, height: -3), blur: 10, color: NSColor.black.withAlphaComponent(0.22).cgColor)
+NSColor.white.setFill()
+arrow.fill()
+ctx.restoreGState()
 
-// 5. Instruction text at bottom
+NSColor(red: 45.0/255.0, green: 26.0/255.0, blue: 8.0/255.0, alpha: 0.18).setStroke()
+arrow.lineWidth = 1.5
+arrow.lineJoinStyle = .round
+arrow.stroke()
+
+// Instruction
 let text = "Drag BarBoss into the Applications folder"
-let font = NSFont.systemFont(ofSize: 26, weight: .semibold)
+let font = NSFont.systemFont(ofSize: 28, weight: .semibold)
 let textAttributes: [NSAttributedString.Key: Any] = [
     .font: font,
-    .foregroundColor: NSColor(red: 45.0/255.0, green: 26.0/255.0, blue: 8.0/255.0, alpha: 0.85)
+    .foregroundColor: NSColor.white.withAlphaComponent(0.94),
+    .shadow: {
+        let shadow = NSShadow()
+        shadow.shadowColor = NSColor.black.withAlphaComponent(0.22)
+        shadow.shadowOffset = NSSize(width: 0, height: -1)
+        shadow.shadowBlurRadius = 3
+        return shadow
+    }()
 ]
 let textSize = (text as NSString).size(withAttributes: textAttributes)
-let textX = (width - textSize.width) / 2
-let textY: CGFloat = 55 * 2
-(text as NSString).draw(at: NSPoint(x: textX, y: textY), withAttributes: textAttributes)
+(text as NSString).draw(
+    at: NSPoint(x: (width - textSize.width) / 2, y: 52 * scale),
+    withAttributes: textAttributes
+)
 
-image.unlockFocus()
+NSGraphicsContext.restoreGraphicsState()
 
-// Save to png
-let outputPath = "scripts/dmg_background.png"
-if let tiff = image.tiffRepresentation,
-   let rep = NSBitmapImageRep(data: tiff),
-   let png = rep.representation(using: .png, properties: [:]) {
-    try? png.write(to: URL(fileURLWithPath: outputPath))
-    print("New Beige DMG background successfully created at \(outputPath)")
+func writePNG(_ rep: NSBitmapImageRep, path: String) {
+    guard let png = rep.representation(using: .png, properties: [:]) else { return }
+    try? png.write(to: URL(fileURLWithPath: path))
+    print("Wrote \(path) \(rep.pixelsWide)x\(rep.pixelsHigh)")
 }
+
+writePNG(rep, path: "scripts/dmg_background.png")
+writePNG(rep, path: "scripts/dmg_bg_1x@2x.png")
+
+guard let oneX = NSBitmapImageRep(
+    bitmapDataPlanes: nil,
+    pixelsWide: Int(windowWidth),
+    pixelsHigh: Int(windowHeight),
+    bitsPerSample: 8,
+    samplesPerPixel: 4,
+    hasAlpha: true,
+    isPlanar: false,
+    colorSpaceName: .deviceRGB,
+    bytesPerRow: 0,
+    bitsPerPixel: 0
+) else {
+    fatalError("Failed to create 1x bitmap")
+}
+oneX.size = NSSize(width: windowWidth, height: windowHeight)
+NSGraphicsContext.saveGraphicsState()
+NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: oneX)
+image.draw(
+    in: NSRect(x: 0, y: 0, width: windowWidth, height: windowHeight),
+    from: .zero,
+    operation: .copy,
+    fraction: 1.0
+)
+NSGraphicsContext.restoreGraphicsState()
+writePNG(oneX, path: "scripts/dmg_bg_1x.png")

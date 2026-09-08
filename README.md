@@ -60,14 +60,15 @@ Once launched:
 
 BarBoss uses Sparkle 2 for updates. To set up your own update feed:
 
-1. Generate your EdDSA keypair:
+1. Generate an EdDSA keypair in the login keychain (account `BarBoss`):
    ```bash
-   # Sparkle generate_keys tool
-   ./scripts/generate_keys
+   # From the Sparkle tools that ship with the Swift package
+   generate_keys --account BarBoss
    ```
-2. Put your public EdDSA key into `BarBoss/Resources/Info.plist` under `SUPublicEDKey`.
-3. Set your Appcast XML URL under `SUFeedURL` in `BarBoss/Resources/Info.plist`.
-4. Publish `appcast.xml` and host your `BarBoss.dmg` release files.
+2. Put the printed public key into `SUPublicEDKey` in `BarBoss/Resources/Info.plist` and `project.yml`.
+3. Keep `SUFeedURL` pointed at `https://barboss.artsvit.com/appcast.xml`.
+4. Run `./scripts/build_dmg.sh`. It signs the DMG, writes `landing/appcast.xml` with `sparkle:version` / `sparkle:edSignature`, and copies `BarBoss.dmg` into `landing/`.
+5. Deploy the landing folder so both `BarBoss.dmg` and `appcast.xml` go live together.
 
 ---
 

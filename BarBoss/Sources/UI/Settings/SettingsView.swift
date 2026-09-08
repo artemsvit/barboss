@@ -160,6 +160,12 @@ struct UpdatesSettingsTab: View {
 
 // MARK: - About Tab
 struct AboutSettingsTab: View {
+    private var aboutVersionLabel: String {
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? "—"
+        return "Version \(version) (Build \(build))"
+    }
+
     var body: some View {
         VStack(spacing: 16) {
             if let icon = NSApp.applicationIconImage {
@@ -182,7 +188,7 @@ struct AboutSettingsTab: View {
                     .font(.title)
                     .fontWeight(.bold)
                 
-                Text("Version 1.0.0 (Build 1)")
+                Text(aboutVersionLabel)
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }

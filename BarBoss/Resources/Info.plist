@@ -19,9 +19,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
@@ -31,6 +31,6 @@
 	<key>SUFeedURL</key>
 	<string>https://barboss.artsvit.com/appcast.xml</string>
 	<key>SUPublicEDKey</key>
-	<string>0000000000000000000000000000000000000000000=</string>
+	<string>qCe12n2kfrYp7PYoMojEtF5I3YWI7QA7vKIh1KbUYzM=</string>
 </dict>
 </plist>

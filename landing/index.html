@@ -72,7 +72,7 @@
       "url": "https://artsvit.com"
     },
     "downloadUrl": "https://barboss.artsvit.com/BarBoss.dmg",
-    "softwareVersion": "1.0.1"
+    "softwareVersion": "1.0.2"
   }
   </script>
   <style>
@@ -114,15 +114,15 @@
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Top Nav - Floating Fixed Header (always stays pinned to top) */
+    /* Top Nav - Floating Fixed Header (width perfectly matches benefit block) */
     header {
       position: fixed;
       top: 16px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 1000;
-      width: calc(100% - 32px);
-      max-width: 960px;
+      width: calc(100% - 48px);
+      max-width: 1132px;
       background: rgba(15, 16, 21, 0.82);
       backdrop-filter: blur(24px) saturate(180%);
       -webkit-backdrop-filter: blur(24px) saturate(180%);
@@ -239,7 +239,7 @@
     .hero {
       max-width: 860px;
       margin: 0 auto;
-      padding: 88px 24px 44px;
+      padding: 144px 24px 48px;
       text-align: center;
       position: relative;
       display: flex;
@@ -483,19 +483,19 @@
     /* Clean macOS Menu Bar Demo */
     /* Clean macOS Menu Bar Demo */
     .demo-wrapper {
-      max-width: 920px;
-      margin: 0 auto 80px;
+      max-width: 1180px;
+      margin: 0 auto 90px;
       padding: 0 24px;
     }
 
     .demo-box {
-      background: linear-gradient(180deg, #12141a 0%, #0a0b0e 100%);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 16px;
+      background: linear-gradient(180deg, #13151b 0%, #090a0d 100%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 22px;
       overflow: hidden;
       box-shadow: 
-        0 24px 60px rgba(0, 0, 0, 0.85),
-        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        0 30px 90px -10px rgba(0, 0, 0, 0.92),
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset;
       transition: border-color 0.25s ease;
     }
 
@@ -519,13 +519,13 @@
     }
 
     .mac-bar {
-      height: 38px;
+      height: 44px;
       min-width: 620px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
-      font-size: 0.82rem;
+      padding: 0 20px;
+      font-size: 0.86rem;
       user-select: none;
     }
 
@@ -540,10 +540,15 @@
 
     .mac-left .apple-logo {
       color: #ffffff;
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      margin-right: 2px;
+      justify-content: center;
+      font-size: 1.12rem;
+      line-height: 1;
+      margin-right: 4px;
       opacity: 0.95;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+      user-select: none;
     }
 
     .mac-left .app-title {
@@ -660,14 +665,14 @@
 
     /* Explanation Banner */
     .demo-content {
-      padding: 32px 28px 36px;
-      background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.04) 0%, transparent 60%);
+      padding: 38px 32px 42px;
+      background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.05) 0%, transparent 65%);
     }
 
     .demo-steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
+      gap: 18px;
       text-align: left;
     }
 
@@ -684,60 +689,47 @@
     }
 
     .step-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.07);
-      border-radius: 12px;
-      padding: 22px 20px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 26px 22px;
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 14px;
       transition: all 0.2s ease;
     }
 
     .step-card:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.045);
+      border-color: rgba(255, 255, 255, 0.16);
       transform: translateY(-2px);
-    }
-
-    .step-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
     }
 
     .step-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
+      width: 42px;
+      height: 42px;
+      border-radius: 11px;
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: #ffffff;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .step-tag {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
     .step-card h4 {
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: #ffffff;
       margin: 0;
+      letter-spacing: -0.01em;
     }
 
     .step-card p {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      line-height: 1.5;
+      line-height: 1.55;
       margin: 0;
     }
 
@@ -835,7 +827,7 @@
       }
 
       .hero {
-        padding: 68px 16px 36px;
+        padding: 108px 16px 36px;
         width: 100%;
         box-sizing: border-box;
       }
@@ -904,17 +896,69 @@
       }
 
       .demo-wrapper {
-        padding: 0 16px;
+        padding: 0 14px;
       }
 
       .mac-bar {
-        overflow-x: auto;
-        font-size: 0.78rem;
+        min-width: 0 !important;
+        width: 100%;
+        overflow-x: visible;
+        font-size: 0.76rem;
         padding: 0 10px;
       }
 
-      .mac-left span:not(.apple) {
+      .mac-left .menu-item {
         display: none;
+      }
+
+      .mac-right {
+        gap: 8px;
+      }
+
+      .mac-hidden-group {
+        gap: 7px;
+      }
+
+      .mac-time {
+        display: none;
+      }
+
+      .mac-battery span {
+        display: none;
+      }
+
+      .mac-barboss-toggle {
+        padding: 6px 8px;
+        margin: -4px -4px;
+        touch-action: manipulation;
+      }
+
+      .demo-content {
+        padding: 24px 16px 28px;
+      }
+
+      .demo-steps {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .step-card {
+        padding: 16px 14px;
+        border-radius: 12px;
+        gap: 10px;
+      }
+
+      footer {
+        margin: 40px auto 0;
+        padding: 20px 16px 36px;
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+      }
+
+      .links {
+        justify-content: center;
+        gap: 14px;
       }
     }
   </style>
@@ -964,7 +1008,7 @@
               <polyline points="7 10 12 15 17 10"/>
               <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            Download BarBoss 1.0.1 (DMG)
+            Download BarBoss 1.0.2 (DMG)
           </a>
           <a href="https://github.com/artemsvit/barboss" class="btn-secondary" target="_blank">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -990,11 +1034,7 @@
         <div class="mac-bar-container">
           <div class="mac-bar">
             <div class="mac-left">
-              <span class="apple-logo" title="Apple Menu">
-                <svg width="14" height="14" viewBox="0 0 170 170" fill="currentColor">
-                  <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.6-7.77-11.72-14.19-5.99-9.33-10.74-19.86-14.26-31.59-3.52-11.73-5.28-23.08-5.28-34.05 0-14.77 3.75-27.18 11.25-37.23 7.5-10.05 17.2-15.19 29.1-15.42 4.47 0 9.5 1.16 15.08 3.48 5.58 2.32 9.61 3.54 12.09 3.66 2.01-.12 6.13-1.42 12.37-3.9 6.23-2.48 11.74-3.6 16.52-3.36 12.39.63 22.45 5.09 30.18 13.38-10.88 6.64-16.19 15.65-15.93 27.03.26 9.46 3.86 17.38 10.8 23.76 6.94 6.38 15.02 10.04 24.24 10.98-2.22 6.64-4.88 13.68-7.98 21.13zM119.22 31.84c0-7.39 2.65-14.45 7.95-21.18 5.3-6.73 11.83-10.66 19.59-11.79.13 1.25.2 2.39.2 3.42 0 7.27-2.77 14.37-8.31 21.3-5.54 6.93-12.19 10.87-19.95 11.82-.13-1.12-.2-2.31-.2-3.57z"/>
-                </svg>
-              </span>
+              <span class="apple-logo" title="Apple Menu"></span>
               <span class="app-title">BarBoss</span>
               <span class="menu-item">File</span>
               <span class="menu-item">Edit</span>
@@ -1084,83 +1124,65 @@
         <div class="demo-content">
           <div class="demo-steps">
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                    <line x1="1" y1="1" x2="23" y2="23"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 01</span>
+              <div class="step-badge" style="color: #f59e0b;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
               </div>
               <h4>Clean Inline Hiding</h4>
               <p>Tuck away background icons directly inside your top menu bar. No secondary floating windows or screen clutter.</p>
             </div>
 
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-                    <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                    <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                    <rect x="3" y="14" width="7" height="7" rx="1.5"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 02</span>
+              <div class="step-badge" style="color: #60a5fa;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+                  <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+                  <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+                  <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                </svg>
               </div>
               <h4>Select Hidden Items</h4>
               <p>Choose which apps to hide using the Item Manager in <b>Settings</b>, or drag icons directly in your menu bar.</p>
             </div>
 
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge" style="color: #f59e0b;">
-                  <svg width="22" height="11" viewBox="0 0 40 14" fill="currentColor">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z M9.88 11.31 C5.69 11.31 3.38 8.44 3.38 4.35 C3.38 2.93 4.59 2.23 7.26 2.23 C12.93 2.23 15.73 3.33 15.73 5.47 C15.73 8.71 13.57 11.31 9.88 11.31 Z M29.37 11.31 C25.68 11.31 23.51 8.71 23.51 5.47 C23.51 3.33 26.30 2.23 31.97 2.23 C34.66 2.23 35.86 2.93 35.86 4.35 C35.86 8.44 33.54 11.31 29.37 11.31 Z"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 03</span>
+              <div class="step-badge" style="color: #ffffff;">
+                <svg width="24" height="12" viewBox="0 0 40 14" fill="currentColor">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z M9.88 11.31 C5.69 11.31 3.38 8.44 3.38 4.35 C3.38 2.93 4.59 2.23 7.26 2.23 C12.93 2.23 15.73 3.33 15.73 5.47 C15.73 8.71 13.57 11.31 9.88 11.31 Z M29.37 11.31 C25.68 11.31 23.51 8.71 23.51 5.47 C23.51 3.33 26.30 2.23 31.97 2.23 C34.66 2.23 35.86 2.93 35.86 4.35 C35.86 8.44 33.54 11.31 29.37 11.31 Z"/>
+                </svg>
               </div>
               <h4>Toggle With Glasses</h4>
               <p>Click the BarBoss glasses icon or press <kbd class="kbd-inline">⌘</kbd><kbd class="kbd-inline">⇧</kbd><kbd class="kbd-inline">B</kbd> to collapse or reveal them instantly.</p>
             </div>
 
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge" style="color: #38bdf8;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 04</span>
+              <div class="step-badge" style="color: #38bdf8;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
               </div>
               <h4>Featherweight & Fast</h4>
               <p>Built 100% natively in Swift & SwiftUI. Consumes near 0% CPU and minimal RAM, keeping your battery lasting all day.</p>
             </div>
 
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge" style="color: #34d399;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                    <path d="m9 12 2 2 4-4"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 05</span>
+              <div class="step-badge" style="color: #34d399;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <path d="m9 12 2 2 4-4"/>
+                </svg>
               </div>
               <h4>100% Private & Offline</h4>
               <p>Zero telemetry, no analytics, and no background tracking. Your preferences and apps stay strictly on your Mac.</p>
             </div>
 
             <div class="step-card">
-              <div class="step-card-header">
-                <div class="step-badge" style="color: #a78bfa;">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
-                  </svg>
-                </div>
-                <span class="step-tag">Benefit 06</span>
+              <div class="step-badge" style="color: #a78bfa;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+                </svg>
               </div>
               <h4>Sparkle Updates</h4>
               <p>Effortless background updates powered by Sparkle 2. Free, open-source, and never tied to subscriptions or paywalls.</p>
