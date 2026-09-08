@@ -4,7 +4,10 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-echo "=== Building BarBoss DMG Distribution ==="
+DEVELOPER_ID="Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)"
+KEYCHAIN_PROFILE="BarBossNotarization"
+
+echo "=== Building, Signing, and Notarizing BarBoss DMG Distribution ==="
 
 # 1. Resolve Xcode Developer Directory
 if ! xcodebuild -version >/dev/null 2>&1; then
@@ -35,8 +38,10 @@ xcodebuild \
     -configuration Release \
     -destination "platform=macOS" \
     -derivedDataPath "${DERIVED_DATA}" \
-    CODE_SIGN_IDENTITY="-" \
-    CODE_SIGNING_REQUIRED=NO \
+    DEVELOPMENT_TEAM="8KK8V96Q6B" \
+    CODE_SIGN_IDENTITY="${DEVELOPER_ID}" \
+    CODE_SIGNING_REQUIRED=YES \
+    ENABLE_HARDENED_RUNTIME=YES \
     build
 
 APP_PATH="${DERIVED_DATA}/Build/Products/Release/BarBoss.app"
@@ -61,9 +66,20 @@ plutil -replace SUFeedURL -string "https://barboss.artsvit.com/appcast.xml" "${A
 plutil -replace SUPublicEDKey -string "0000000000000000000000000000000000000000000=" "${APP_PATH}/Contents/Info.plist"
 plutil -replace SUEnableAutomaticChecks -bool YES "${APP_PATH}/Contents/Info.plist"
 
-# 5. Sign app and frameworks ad-hoc for local execution
-echo "Code signing BarBoss.app (ad-hoc)..."
-codesign --force --deep --sign - "${APP_PATH}"
+# 5. Code sign embedded frameworks & app with Developer ID & Hardened Runtime
+echo "Deep signing nested frameworks & tools..."
+if [ -d "${APP_PATH}/Contents/Frameworks" ]; then
+    find "${APP_PATH}/Contents/Frameworks" -type f \( -name "*.dylib" -o -perm +0111 \) -exec codesign --force --options runtime --timestamp --sign "${DEVELOPER_ID}" {} + 2>/dev/null || true
+    find "${APP_PATH}/Contents/Frameworks" -type d -name "*.framework" -exec codesign --force --options runtime --timestamp --sign "${DEVELOPER_ID}" {} + 2>/dev/null || true
+fi
+
+echo "Signing BarBoss.app with Developer ID & Hardened Runtime..."
+codesign --force --options runtime --timestamp \
+    --entitlements "${ROOT_DIR}/BarBoss/Resources/BarBoss.entitlements" \
+    --sign "${DEVELOPER_ID}" \
+    "${APP_PATH}"
+
+codesign --verify --deep --strict --verbose=2 "${APP_PATH}"
 
 # 6. Prepare staging folder for create-dmg
 DMG_STAGING="${BUILD_DIR}/dmg_staging"
@@ -92,6 +108,24 @@ create-dmg \
     "${DMG_OUTPUT}" \
     "${DMG_STAGING}"
 
-echo "=== DMG Build Complete! ==="
+# 8. Sign DMG
+echo "Signing DMG with Developer ID..."
+codesign --force --sign "${DEVELOPER_ID}" --timestamp "${DMG_OUTPUT}"
+
+# 9. Notarize DMG with Apple Notary Service
+echo "Submitting DMG to Apple Notary Service (profile: ${KEYCHAIN_PROFILE})..."
+xcrun notarytool submit "${DMG_OUTPUT}" \
+    --keychain-profile "${KEYCHAIN_PROFILE}" \
+    --wait
+
+# 10. Staple ticket to DMG
+echo "Stapling notarization ticket to DMG..."
+xcrun stapler staple "${DMG_OUTPUT}"
+
+# 11. Validate with Gatekeeper Assessment
+echo "Validating Gatekeeper acceptance for DMG..."
+spctl -a -t open --context context:primary-signature -v "${DMG_OUTPUT}"
+
+echo "=== Notarized DMG Build Complete! ==="
 echo "Artifact: ${DMG_OUTPUT}"
 ls -lh "${DMG_OUTPUT}"
