@@ -3,55 +3,55 @@ import SwiftUI
 public struct ItemManagerView: View {
     @ObservedObject var scanner = MenuBarItemScanner.shared
     @ObservedObject var prefs = Preferences.shared
-    @State private var searchText = ""
+    @ObservedObject var permissions = PermissionsManager.shared
     
     public init() {}
     
     var shownItems: [DiscoveredMenuBarItem] {
-        let items = scanner.discoveredItems.filter { !prefs.isItemHidden($0.id) }
-        if searchText.isEmpty { return items }
-        return items.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        scanner.discoveredItems.filter { !prefs.isItemHidden($0.id) }
     }
     
     var hiddenItems: [DiscoveredMenuBarItem] {
-        let items = scanner.discoveredItems.filter { prefs.isItemHidden($0.id) }
-        if searchText.isEmpty { return items }
-        return items.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+        scanner.discoveredItems.filter { prefs.isItemHidden($0.id) }
     }
     
     public var body: some View {
-        VStack(spacing: 12) {
-            // Search and Refresh Header
-            HStack {
-                HStack(spacing: 6) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundColor(.secondary)
-                        .font(.system(size: 12))
-                    TextField("Filter menu bar items...", text: $searchText)
-                        .textFieldStyle(.plain)
-                        .font(.system(size: 12))
-                    if !searchText.isEmpty {
-                        Button(action: { searchText = "" }) {
-                            Image(systemName: "xmark.circle.fill")
-                                .foregroundColor(.secondary)
-                                .font(.system(size: 11))
-                        }
-                        .buttonStyle(.plain)
+        VStack(spacing: 10) {
+            // Permissions Warning Banner if not granted
+            if !permissions.hasAllPermissions {
+                HStack(spacing: 10) {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                        .font(.system(size: 16))
+                    
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Accessibility Permission Required")
+                            .font(.system(size: 11, weight: .bold))
+                        Text("Accessibility is needed to manage and toggle your menu bar icons.")
+                            .font(.system(size: 10))
+                            .foregroundColor(.secondary)
                     }
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        permissions.requestAccessibility()
+                    }) {
+                        Text("Grant Permission")
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.orange)
                 }
-                .padding(6)
-                .background(Color.secondary.opacity(0.1))
+                .padding(10)
+                .background(Color.orange.opacity(0.1))
                 .clipShape(RoundedRectangle(cornerRadius: 8))
-                
-                Spacer()
-                
-                Button(action: { scanner.scanItems() }) {
-                    Label("Refresh", systemImage: "arrow.clockwise")
-                        .font(.system(size: 12))
-                }
-                .buttonStyle(.bordered)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.orange.opacity(0.3), lineWidth: 1)
+                )
+                .padding(.horizontal, 4)
             }
-            .padding(.horizontal, 4)
             
             // 2-Sided Panel
             HStack(spacing: 14) {
@@ -84,6 +84,7 @@ public struct ItemManagerView: View {
                                     ItemRow(item: item, isHiddenList: false) {
                                         withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
                                             prefs.hideItem(item.id)
+                                            MenuBarManager.shared.updateItemStates()
                                         }
                                     }
                                 }
@@ -135,6 +136,7 @@ public struct ItemManagerView: View {
                                     ItemRow(item: item, isHiddenList: true) {
                                         withAnimation(.spring(response: 0.25, dampingFraction: 0.8)) {
                                             prefs.showItem(item.id)
+                                            MenuBarManager.shared.updateItemStates()
                                         }
                                     }
                                 }
@@ -150,8 +152,9 @@ public struct ItemManagerView: View {
                     )
                 }
             }
-            .frame(height: 250)
+            .frame(height: 320)
             
+            // Footer Tip
             Text("Tip: Click an arrow to move an app between Shown and Hidden.")
                 .font(.caption)
                 .foregroundColor(.secondary)

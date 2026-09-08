@@ -67,6 +67,7 @@ public final class FloatingBarController: NSObject {
     public func hide() {
         guard let panel = panel, panel.isVisible else { return }
         removeOutsideClickMonitor()
+        Preferences.shared.isHidden = true
         
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = 0.15

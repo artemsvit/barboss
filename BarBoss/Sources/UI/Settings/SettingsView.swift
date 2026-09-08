@@ -16,6 +16,11 @@ public struct SettingsView: View {
                     Label("General", systemImage: "gearshape")
                 }
             
+            PermissionsTab()
+                .tabItem {
+                    Label("Permissions", systemImage: "lock.shield")
+                }
+            
             HotkeysSettingsTab()
                 .tabItem {
                     Label("Hotkeys", systemImage: "keyboard")
@@ -31,7 +36,7 @@ public struct SettingsView: View {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 620, height: 420)
+        .frame(width: 630, height: 480)
         .padding(10)
     }
 }
@@ -54,6 +59,7 @@ struct GeneralSettingsTab: View {
             } header: {
                 Text("Startup and Behavior").font(.headline)
             }
+            
             
             Section {
                 Picker("Auto-hide delay:", selection: $prefs.autoHideDelay) {
@@ -84,12 +90,7 @@ struct HotkeysSettingsTab: View {
                 HStack {
                     Text("Toggle Hidden Items:")
                     Spacer()
-                    Text("Command + Shift + B")
-                        .font(.system(.body, design: .monospaced))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Color.secondary.opacity(0.15))
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                    ShortcutRecorderView()
                 }
                 
                 Text("Press this keyboard combination from any app to instantly toggle your hidden menu bar items.")
@@ -195,15 +196,26 @@ struct AboutSettingsTab: View {
             Divider()
                 .padding(.horizontal, 40)
             
-            HStack(spacing: 20) {
+            HStack(spacing: 16) {
                 Link("Documentation", destination: URL(string: "https://barboss.artsvit.com")!)
                     .font(.subheadline)
                 
                 Text("•").foregroundColor(.secondary)
                 
-                Link("Sparkle Project", destination: URL(string: "https://sparkle-project.org")!)
-                    .font(.subheadline)
+                HStack(spacing: 4) {
+                    Text("Developed by")
+                        .foregroundColor(.secondary)
+                    Link("Artem Svitelskyi", destination: URL(string: "https://artsvit.com")!)
+                }
+                .font(.subheadline)
             }
+            
+            Button("Show Welcome Tour...") {
+                OnboardingWindowController.shared.showWindow()
+            }
+            .buttonStyle(.link)
+            .font(.caption)
+            .padding(.top, 2)
             
             Text("Copyright © 2026 BarBoss. All rights reserved.")
                 .font(.caption)

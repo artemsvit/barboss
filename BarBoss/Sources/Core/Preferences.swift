@@ -2,20 +2,23 @@ import SwiftUI
 import ServiceManagement
 
 public enum HideMode: String, CaseIterable, Identifiable {
-    case floatingBar = "floatingBar"
     case inline = "inline"
+    case floatingBar = "floatingBar"
+    case both = "both"
     
     public var id: String { rawValue }
     public var title: String {
         switch self {
-        case .floatingBar: return "BarBoss Bar"
         case .inline: return "Inline Menu Bar"
+        case .floatingBar: return "BarBoss Bar"
+        case .both: return "Both (Menu Bar & BarBoss Bar)"
         }
     }
     public var description: String {
         switch self {
-        case .floatingBar: return "Displays hidden items in a sleek secondary bar beneath the menu bar."
         case .inline: return "Collapses and expands items directly in the top menu bar."
+        case .floatingBar: return "Hides items from the menu bar and shows them in the BarBoss Bar."
+        case .both: return "Expands items in the top bar and also displays the BarBoss Bar."
         }
     }
 }
@@ -125,8 +128,7 @@ public final class Preferences: ObservableObject {
     private init() {
         self.isHidden = defaults.object(forKey: Keys.isHidden) != nil ? defaults.bool(forKey: Keys.isHidden) : false
         
-        let savedHideMode = defaults.string(forKey: Keys.hideMode) ?? HideMode.floatingBar.rawValue
-        self.hideMode = HideMode(rawValue: savedHideMode) ?? .floatingBar
+        self.hideMode = .inline
         
         self.autoHideDelay = defaults.object(forKey: Keys.autoHideDelay) != nil ? defaults.double(forKey: Keys.autoHideDelay) : 5.0
         self.hideOnClickOutside = defaults.object(forKey: Keys.hideOnClickOutside) != nil ? defaults.bool(forKey: Keys.hideOnClickOutside) : true

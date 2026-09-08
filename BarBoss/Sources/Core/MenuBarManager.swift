@@ -1,16 +1,17 @@
 import AppKit
 import SwiftUI
 import Combine
+import Darwin
+import ObjectiveC.runtime
 
 public final class MenuBarManager: NSObject, NSMenuDelegate {
     public static let shared = MenuBarManager()
     
     private var primaryStatusItem: NSStatusItem!
-    private var hiddenSeparatorItem: NSStatusItem!
-    private var alwaysHiddenSeparatorItem: NSStatusItem?
     
     private var autoHideTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
+    private let modernVisibilityController = ModernMenuBarVisibilityController()
     
     public var onOpenSettings: (() -> Void)?
     
@@ -26,7 +27,21 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
     
     private func setupStatusItems() {
-        // 1. Primary BarBoss status item (Toggle & Menu)
+        // Clean up legacy separator keys from UserDefaults
+        let sepKey = "NSStatusItem Preferred Position BarBoss_HiddenSeparator"
+        let visibleCCKey = "NSStatusItem VisibleCC BarBoss_HiddenSeparator"
+        UserDefaults.standard.removeObject(forKey: sepKey)
+        UserDefaults.standard.removeObject(forKey: visibleCCKey)
+        
+        let primaryKey = "NSStatusItem Preferred Position BarBoss_PrimaryItem"
+        let currentPrimary = UserDefaults.standard.double(forKey: primaryKey)
+        if currentPrimary <= 0 || UserDefaults.standard.object(forKey: primaryKey) == nil {
+            UserDefaults.standard.set(200.0, forKey: primaryKey)
+        }
+        UserDefaults.standard.synchronize()
+        syncMenuBarAgentPreferencesIfNeeded()
+        
+        // Primary BarBoss status item (Toggle & Menu)
         primaryStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         primaryStatusItem.autosaveName = "BarBoss_PrimaryItem"
         
@@ -34,33 +49,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             button.target = self
             button.action = #selector(handlePrimaryItemClick(_:))
             button.sendAction(on: [.leftMouseUp, .rightMouseUp])
-            button.toolTip = "BarBoss Glasses (Click to open BarBoss Bar, Right-click for menu)"
-        }
-        
-        // 2. Hidden separator item
-        hiddenSeparatorItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        hiddenSeparatorItem.autosaveName = "BarBoss_HiddenSeparator"
-        
-        if let sepButton = hiddenSeparatorItem.button {
-            sepButton.target = self
-            sepButton.action = #selector(handleSeparatorClick(_:))
-            sepButton.toolTip = "BarBoss Separator"
-        }
-        
-        // 3. Always hidden separator item (if enabled)
-        if Preferences.shared.showAlwaysHiddenSection {
-            setupAlwaysHiddenItem()
-        }
-    }
-    
-    private func setupAlwaysHiddenItem() {
-        if alwaysHiddenSeparatorItem == nil {
-            alwaysHiddenSeparatorItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-            alwaysHiddenSeparatorItem?.autosaveName = "BarBoss_AlwaysHiddenSeparator"
-            if let button = alwaysHiddenSeparatorItem?.button {
-                button.title = "‖"
-                button.toolTip = "BarBoss Always Hidden"
-            }
+            button.toolTip = "BarBoss Glasses (Click to toggle hidden items, Right-click for menu)"
         }
     }
     
@@ -74,68 +63,42 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             }
             .store(in: &cancellables)
         
-        prefs.$hideMode
+        prefs.$hiddenItemIdentifiers
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.updateItemStates()
             }
             .store(in: &cancellables)
-        
-        prefs.$separatorStyle
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updateSeparatorAppearance()
-            }
-            .store(in: &cancellables)
-        
-        prefs.$showAlwaysHiddenSection
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] show in
-                if show {
-                    self?.setupAlwaysHiddenItem()
-                } else {
-                    self?.alwaysHiddenSeparatorItem = nil
-                }
-            }
-            .store(in: &cancellables)
+
+        let workspaceNotifications = NSWorkspace.shared.notificationCenter
+        Publishers.Merge(
+            workspaceNotifications.publisher(for: NSWorkspace.didLaunchApplicationNotification),
+            workspaceNotifications.publisher(for: NSWorkspace.didTerminateApplicationNotification)
+        )
+        .debounce(for: .milliseconds(250), scheduler: DispatchQueue.main)
+        .sink { [weak self] _ in
+            self?.updateItemStates()
+            MenuBarItemScanner.shared.scanItems()
+        }
+        .store(in: &cancellables)
     }
     
     @objc private func handlePrimaryItemClick(_ sender: NSStatusBarButton) {
-        guard let currentEvent = NSApp.currentEvent else { return }
-        
-        // Right click or Control-click opens contextual menu
-        if currentEvent.type == .rightMouseUp || (currentEvent.modifierFlags.contains(.control)) {
+        if let currentEvent = NSApp.currentEvent,
+           currentEvent.type == .rightMouseUp || currentEvent.modifierFlags.contains(.control) {
             showContextMenu()
             return
         }
         
-        // Left click toggles BarBoss Bar or inline hiding
-        let prefs = Preferences.shared
-        switch prefs.hideMode {
-        case .floatingBar:
-            FloatingBarController.shared.toggle(relativeTo: sender) { [weak self] in
-                self?.onOpenSettings?()
-            }
-        case .inline:
-            toggleHiddenItems()
-        }
-    }
-    
-    @objc private func handleSeparatorClick(_ sender: NSStatusBarButton) {
-        if !Preferences.shared.isHidden {
-            toggleHiddenItems()
-        }
+        // Left click (or click without right/control modifier) toggles hidden items
+        toggleHiddenItems()
     }
     
     public func toggleHiddenItems() {
         let prefs = Preferences.shared
         prefs.isHidden.toggle()
         
-        if prefs.hideMode == .floatingBar {
-            FloatingBarController.shared.toggle(relativeTo: primaryStatusItem.button) { [weak self] in
-                self?.onOpenSettings?()
-            }
-        }
+        updateItemStates()
         
         if !prefs.isHidden && prefs.autoHideDelay > 0 {
             startAutoHideTimer()
@@ -156,26 +119,27 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         }
     }
     
-    private func updateItemStates() {
+    public func updateItemStates() {
         updatePrimaryButtonAppearance()
-        updateSeparatorAppearance()
         
         let isHidden = Preferences.shared.isHidden
-        let hideMode = Preferences.shared.hideMode
-        
-        if hideMode == .inline {
+
+        if modernVisibilityController.isSupported {
             if isHidden {
-                hiddenSeparatorItem.length = 0
-                hiddenSeparatorItem.button?.title = ""
+                modernVisibilityController.hide(
+                    bundleIdentifiers: Set(Preferences.shared.hiddenItemIdentifiers)
+                )
             } else {
-                hiddenSeparatorItem.length = NSStatusItem.variableLength
-                hiddenSeparatorItem.button?.title = " " + Preferences.shared.separatorStyle.symbol + " "
+                modernVisibilityController.showAll()
             }
-        } else {
-            // In floating bar mode, separator is not used
-            hiddenSeparatorItem.length = 0
-            hiddenSeparatorItem.button?.title = ""
+            return
         }
+    }
+
+    public func stop() {
+        stopAutoHideTimer()
+        modernVisibilityController.showAll()
+        cancellables.removeAll()
     }
     
     private func updatePrimaryButtonAppearance() {
@@ -190,14 +154,8 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             button.image = image
             button.imagePosition = .imageOnly
         }
-    }
-    
-    private func updateSeparatorAppearance() {
-        guard let sepButton = hiddenSeparatorItem?.button else { return }
-        let isHidden = Preferences.shared.isHidden
-        if !isHidden && Preferences.shared.hideMode == .inline {
-            sepButton.title = " " + Preferences.shared.separatorStyle.symbol + " "
-        }
+        
+        button.toolTip = isHidden ? "BarBoss Glasses (Click to show hidden items)" : "BarBoss Glasses (Click to hide items)"
     }
     
     private func startAutoHideTimer() {
@@ -221,12 +179,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         let menu = NSMenu()
         menu.delegate = self
         
-        // 1. Open BarBoss Bar
-        let barItem = NSMenuItem(title: "BarBoss Bar", action: #selector(contextShowFloatingBar), keyEquivalent: "")
-        barItem.target = self
-        menu.addItem(barItem)
-        
-        // 2. Toggle Items
+        // 1. Toggle Items
         let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
         let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
         toggleItem.target = self
@@ -234,19 +187,19 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         
         menu.addItem(NSMenuItem.separator())
         
-        // 3. Settings
+        // 2. Settings
         let settingsItem = NSMenuItem(title: "Settings...", action: #selector(contextOpenSettings), keyEquivalent: ",")
         settingsItem.target = self
         menu.addItem(settingsItem)
         
-        // 4. Sparkle Check for Updates
+        // 3. Sparkle Check for Updates
         let updatesItem = NSMenuItem(title: "Check for Updates...", action: #selector(contextCheckForUpdates), keyEquivalent: "")
         updatesItem.target = self
         menu.addItem(updatesItem)
         
         menu.addItem(NSMenuItem.separator())
         
-        // 5. Quit
+        // 4. Quit
         let quitItem = NSMenuItem(title: "Quit BarBoss", action: #selector(contextQuit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
@@ -263,12 +216,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         toggleHiddenItems()
     }
     
-    @objc private func contextShowFloatingBar() {
-        FloatingBarController.shared.show(relativeTo: primaryStatusItem.button) { [weak self] in
-            self?.onOpenSettings?()
-        }
-    }
-    
     @objc private func contextOpenSettings() {
         onOpenSettings?()
     }
@@ -279,5 +226,107 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     
     @objc private func contextQuit() {
         NSApp.terminate(nil)
+    }
+    
+    private func syncMenuBarAgentPreferencesIfNeeded() {
+        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 else { return }
+        let path = ("~/Library/Preferences/com.apple.MenuBarAgent.plist" as NSString).expandingTildeInPath
+        let url = URL(fileURLWithPath: path)
+        guard let data = try? Data(contentsOf: url),
+              var plist = try? PropertyListSerialization.propertyList(from: data, options: .mutableContainersAndLeaves, format: nil) as? [String: Any],
+              var positions = plist["TrailingItemPreferredPositions"] as? [String: Any] else { return }
+        
+        let primaryKey = "status:com.barboss.app::BarBoss_PrimaryItem"
+        let sepKey = "status:com.barboss.app::BarBoss_HiddenSeparator"
+        
+        var changed = false
+        if (positions[primaryKey] as? NSNumber)?.doubleValue != 200.0 {
+            positions[primaryKey] = 200.0
+            changed = true
+        }
+        if positions.removeValue(forKey: sepKey) != nil {
+            changed = true
+        }
+        
+        if changed {
+            plist["TrailingItemPreferredPositions"] = positions
+            if let updatedData = try? PropertyListSerialization.data(fromPropertyList: plist, format: .binary, options: 0) {
+                try? updatedData.write(to: url)
+            }
+        }
+    }
+}
+
+/// Small runtime bridge for the menu-bar assessment service introduced with
+/// macOS 27. Keeping the bridge dynamic lets BarBoss continue to run on its
+/// existing macOS 14 deployment target.
+final class ModernMenuBarVisibilityController {
+    private var agentProcess: Process?
+    private var lastHiddenBundleIdentifiers = Set<String>()
+    private var lastRunningBundleIdentifiers = Set<String>()
+
+    var isSupported: Bool {
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+    }
+
+    deinit {
+        showAll()
+    }
+
+    func hide(bundleIdentifiers: Set<String>) {
+        let hidden = bundleIdentifiers.filter { !$0.isEmpty }
+        guard isSupported, !hidden.isEmpty else {
+            showAll()
+            return
+        }
+
+        let running = Set(NSWorkspace.shared.runningApplications.compactMap(\.bundleIdentifier))
+        if agentProcess?.isRunning == true,
+           hidden == lastHiddenBundleIdentifiers,
+           running == lastRunningBundleIdentifiers {
+            return
+        }
+
+        stopAgent()
+        lastHiddenBundleIdentifiers = hidden
+        lastRunningBundleIdentifiers = running
+        startAgent(hiddenBundleIDs: hidden)
+    }
+
+    func showAll() {
+        stopAgent()
+        lastHiddenBundleIdentifiers.removeAll()
+        lastRunningBundleIdentifiers.removeAll()
+    }
+
+    private func stopAgent() {
+        if let process = agentProcess, process.isRunning {
+            process.terminate()
+        }
+        agentProcess = nil
+    }
+
+    private func startAgent(hiddenBundleIDs: Set<String>) {
+        let executableURL = Bundle.main.bundleURL
+            .appendingPathComponent("Contents/Helpers/BarBossVisibilityAgent.app/Contents/MacOS/BarBossVisibilityAgent")
+        guard FileManager.default.isExecutableFile(atPath: executableURL.path) else {
+            print("BarBoss: Menu-bar visibility agent is missing from the application bundle")
+            return
+        }
+
+        let process = Process()
+        process.executableURL = executableURL
+        process.arguments = [
+            "--parent-pid", String(getpid()),
+            "--hide", hiddenBundleIDs.sorted().joined(separator: ",")
+        ]
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do {
+            try process.run()
+            agentProcess = process
+        } catch {
+            print("BarBoss: Unable to start menu-bar visibility agent: \(error.localizedDescription)")
+        }
     }
 }

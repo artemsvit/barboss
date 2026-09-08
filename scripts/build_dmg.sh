@@ -72,6 +72,9 @@ if [ -d "${APP_PATH}/Contents/Frameworks" ]; then
     find "${APP_PATH}/Contents/Frameworks" -type f \( -name "*.dylib" -o -perm +0111 \) -exec codesign --force --options runtime --timestamp --sign "${DEVELOPER_ID}" {} + 2>/dev/null || true
     find "${APP_PATH}/Contents/Frameworks" -type d -name "*.framework" -exec codesign --force --options runtime --timestamp --sign "${DEVELOPER_ID}" {} + 2>/dev/null || true
 fi
+if [ -d "${APP_PATH}/Contents/Helpers" ]; then
+    find "${APP_PATH}/Contents/Helpers" -maxdepth 2 -type d -name "*.app" -exec codesign --force --options runtime --timestamp --sign "${DEVELOPER_ID}" {} + 2>/dev/null || true
+fi
 
 echo "Signing BarBoss.app with Developer ID & Hardened Runtime..."
 codesign --force --options runtime --timestamp \

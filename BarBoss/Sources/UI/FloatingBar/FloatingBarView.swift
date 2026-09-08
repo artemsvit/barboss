@@ -83,7 +83,7 @@ public struct FloatingBarView: View {
                     HStack(spacing: 12) {
                         ForEach(hiddenItems) { item in
                             HiddenAppButton(item: item) {
-                                scanner.activateApp(bundleIdentifier: item.bundleIdentifier)
+                                scanner.activateApp(bundleIdentifier: item.bundleIdentifier, processIdentifier: item.processIdentifier)
                             }
                         }
                     }

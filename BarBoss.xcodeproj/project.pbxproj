@@ -8,10 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D07B175BB86BA2837FC251C /* HoverManager.swift */; };
+		20CEFEA44378AB583D1F24AA /* PermissionsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4531E8A874A35B7DC092391F /* PermissionsTab.swift */; };
 		22E1848806CB51A90E15C14E /* FloatingBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */; };
+		32051CB6D543B9056DBA4A5C /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */; };
 		37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D0050C4337E04D5E9FA5C /* SettingsView.swift */; };
+		37F2976CC5E523F55E08D18A /* KeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */; };
+		38FAA6FBDAF216D7354A39A9 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F14E5601CB9FB848343725 /* OnboardingView.swift */; };
 		3D888FBA0C412ED6EAA54278 /* MenuBarItemScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */; };
+		480DC3A919782EB39F53AB60 /* ShortcutRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5687FAB155BA752C6734C183 /* ShortcutRecorderView.swift */; };
 		4FAB9B7421F1E4C5D686F06D /* BarBossApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B751EFE760678A1B2D5143CA /* BarBossApp.swift */; };
+		5106E6BD27CCEFC38BC82116 /* BarBossVisibilityAgent.app in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = FCC96F67184061F56DA86787 /* BarBossVisibilityAgent.app */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6592B0FEBFDB0339B94B725F /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */; };
 		743CD257F6DA709CDD4BC73E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F674FD5192FE657B75B3224 /* Preferences.swift */; };
 		80F4402CE60F8C4D3401D3AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67438F5AF6680A9E39AABEFB /* Assets.xcassets */; };
@@ -19,16 +25,45 @@
 		98B935F4B90CF70E991D6048 /* UpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 888B59B69CA10757E7CD6B7E /* UpdateManager.swift */; };
 		AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */; };
 		B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53577315E8F719E5ED5B48DA /* ItemManagerView.swift */; };
+		BF021F7512D861BAAEB1E808 /* OnboardingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E983AA04178E873F6901D534 /* OnboardingWindowController.swift */; };
 		D3B21A8D12D409B4AFB6EEF8 /* FloatingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */; };
+		DF2B6740D54F096D3E5B1C77 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2FAE175CCD97532A409E1B /* main.swift */; };
 		F67918E3E103F35BA6BBBAFB /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */; };
 		FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C548DD91941A1707AC940D6C /* MenuBarManager.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		50FA8F39BF36038F3D015855 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 6E3DCD971576FF75448B76E1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89F04D8FB373B553A7260A02;
+			remoteInfo = BarBossVisibilityAgent;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		1CFD811B40668DE21E98FE3E /* Embed Dependencies */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Helpers;
+			dstSubfolderSpec = 1;
+			files = (
+				5106E6BD27CCEFC38BC82116 /* BarBossVisibilityAgent.app in Embed Dependencies */,
+			);
+			name = "Embed Dependencies";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		128B483420AEEE8B168A9502 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F674FD5192FE657B75B3224 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		20F14E5601CB9FB848343725 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
+		4531E8A874A35B7DC092391F /* PermissionsTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsTab.swift; sourceTree = "<group>"; };
 		53577315E8F719E5ED5B48DA /* ItemManagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemManagerView.swift; sourceTree = "<group>"; };
+		5687FAB155BA752C6734C183 /* ShortcutRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutRecorderView.swift; sourceTree = "<group>"; };
 		5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		650D0050C4337E04D5E9FA5C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		67438F5AF6680A9E39AABEFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -39,8 +74,13 @@
 		A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarView.swift; sourceTree = "<group>"; };
 		B751EFE760678A1B2D5143CA /* BarBossApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarBossApp.swift; sourceTree = "<group>"; };
 		C548DD91941A1707AC940D6C /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
+		D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
+		DC2FAE175CCD97532A409E1B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCombo.swift; sourceTree = "<group>"; };
+		E983AA04178E873F6901D534 /* OnboardingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingWindowController.swift; sourceTree = "<group>"; };
 		F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemScanner.swift; sourceTree = "<group>"; };
 		F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarController.swift; sourceTree = "<group>"; };
+		FCC96F67184061F56DA86787 /* BarBossVisibilityAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BarBossVisibilityAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,8 +108,10 @@
 			isa = PBXGroup;
 			children = (
 				53577315E8F719E5ED5B48DA /* ItemManagerView.swift */,
+				4531E8A874A35B7DC092391F /* PermissionsTab.swift */,
 				650D0050C4337E04D5E9FA5C /* SettingsView.swift */,
 				5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */,
+				5687FAB155BA752C6734C183 /* ShortcutRecorderView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -78,8 +120,26 @@
 			isa = PBXGroup;
 			children = (
 				9058D625F93FAC25D7B0270D /* BarBoss.app */,
+				FCC96F67184061F56DA86787 /* BarBossVisibilityAgent.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		4526D2A787B5D40F309CF37F /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				20F14E5601CB9FB848343725 /* OnboardingView.swift */,
+				E983AA04178E873F6901D534 /* OnboardingWindowController.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		4DFD8AD1BB35A2EBECB7690C /* BarBossVisibilityAgent */ = {
+			isa = PBXGroup;
+			children = (
+				DC2FAE175CCD97532A409E1B /* main.swift */,
+			);
+			path = BarBossVisibilityAgent;
 			sourceTree = "<group>";
 		};
 		8E9FC978DE71F09C5BBF2561 /* Core */ = {
@@ -90,6 +150,7 @@
 				9D07B175BB86BA2837FC251C /* HoverManager.swift */,
 				F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */,
 				C548DD91941A1707AC940D6C /* MenuBarManager.swift */,
+				D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */,
 				1F674FD5192FE657B75B3224 /* Preferences.swift */,
 			);
 			path = Core;
@@ -112,6 +173,7 @@
 			children = (
 				B751EFE760678A1B2D5143CA /* BarBossApp.swift */,
 				8E9FC978DE71F09C5BBF2561 /* Core */,
+				F4FFF764341A785944DC3B4E /* Model */,
 				F534EF521DC7AF6F632CD037 /* UI */,
 				D606569DBDF9AFFE18F1EF5C /* Updates */,
 			);
@@ -122,6 +184,7 @@
 		CAD7F3A89D6A476A48567D63 = {
 			isa = PBXGroup;
 			children = (
+				4DFD8AD1BB35A2EBECB7690C /* BarBossVisibilityAgent */,
 				93DAB4959B2C0BFB75F40AD8 /* Resources */,
 				9EC9D58A593EE82F51A8725B /* Sources */,
 				42D9090654A6323937B283BE /* Products */,
@@ -136,10 +199,19 @@
 			path = Updates;
 			sourceTree = "<group>";
 		};
+		F4FFF764341A785944DC3B4E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		F534EF521DC7AF6F632CD037 /* UI */ = {
 			isa = PBXGroup;
 			children = (
 				061AD9758F0B0918D9B593EB /* FloatingBar */,
+				4526D2A787B5D40F309CF37F /* Onboarding */,
 				276CC2493779F498F70CC25B /* Settings */,
 			);
 			path = UI;
@@ -155,10 +227,12 @@
 				736A00F0EFCED8BC069ABE03 /* Sources */,
 				ACCBDB5097FC468FA85ACB84 /* Resources */,
 				29F8DC3957E429627C312446 /* Frameworks */,
+				1CFD811B40668DE21E98FE3E /* Embed Dependencies */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				4BD5DF3A7C7A610716CF2D1A /* PBXTargetDependency */,
 			);
 			name = BarBoss;
 			packageProductDependencies = (
@@ -166,6 +240,23 @@
 			);
 			productName = BarBoss;
 			productReference = 9058D625F93FAC25D7B0270D /* BarBoss.app */;
+			productType = "com.apple.product-type.application";
+		};
+		89F04D8FB373B553A7260A02 /* BarBossVisibilityAgent */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B6D1CBD791B7F29D3AFB4CB1 /* Build configuration list for PBXNativeTarget "BarBossVisibilityAgent" */;
+			buildPhases = (
+				C2BD51D52FF794B50298D423 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BarBossVisibilityAgent;
+			packageProductDependencies = (
+			);
+			productName = BarBossVisibilityAgent;
+			productReference = FCC96F67184061F56DA86787 /* BarBossVisibilityAgent.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -177,6 +268,12 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					1CC1D83CF838EBF356D20404 = {
+						DevelopmentTeam = 8KK8V96Q6B;
+					};
+					89F04D8FB373B553A7260A02 = {
+						DevelopmentTeam = 8KK8V96Q6B;
+					};
 				};
 			};
 			buildConfigurationList = 874A18928E118305AC40EF3F /* Build configuration list for PBXProject "BarBoss" */;
@@ -197,6 +294,7 @@
 			projectRoot = "";
 			targets = (
 				1CC1D83CF838EBF356D20404 /* BarBoss */,
+				89F04D8FB373B553A7260A02 /* BarBossVisibilityAgent */,
 			);
 		};
 /* End PBXProject section */
@@ -224,16 +322,38 @@
 				AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */,
 				0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */,
 				B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */,
+				37F2976CC5E523F55E08D18A /* KeyCombo.swift in Sources */,
 				3D888FBA0C412ED6EAA54278 /* MenuBarItemScanner.swift in Sources */,
 				FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */,
+				38FAA6FBDAF216D7354A39A9 /* OnboardingView.swift in Sources */,
+				BF021F7512D861BAAEB1E808 /* OnboardingWindowController.swift in Sources */,
+				32051CB6D543B9056DBA4A5C /* PermissionsManager.swift in Sources */,
+				20CEFEA44378AB583D1F24AA /* PermissionsTab.swift in Sources */,
 				743CD257F6DA709CDD4BC73E /* Preferences.swift in Sources */,
 				37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */,
 				F67918E3E103F35BA6BBBAFB /* SettingsWindowController.swift in Sources */,
+				480DC3A919782EB39F53AB60 /* ShortcutRecorderView.swift in Sources */,
 				98B935F4B90CF70E991D6048 /* UpdateManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C2BD51D52FF794B50298D423 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DF2B6740D54F096D3E5B1C77 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4BD5DF3A7C7A610716CF2D1A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89F04D8FB373B553A7260A02 /* BarBossVisibilityAgent */;
+			targetProxy = 50FA8F39BF36038F3D015855 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		07B188BEEA63F54988A5FCDD /* Debug */ = {
@@ -304,8 +424,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BarBoss/Resources/BarBoss.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 8KK8V96Q6B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BarBoss/Resources/Info.plist;
@@ -314,7 +436,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.barboss.app;
 				PRODUCT_NAME = BarBoss;
 				SDKROOT = macosx;
@@ -327,8 +449,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = BarBoss/Resources/BarBoss.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 8KK8V96Q6B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = BarBoss/Resources/Info.plist;
@@ -337,13 +461,57 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.barboss.app;
 				PRODUCT_NAME = BarBoss;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
+		};
+		6E8D835244A85005C92A3C99 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 8KK8V96Q6B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.barboss.visibility-agent";
+				PRODUCT_NAME = BarBossVisibilityAgent;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+		881ACB6689F537CE12212C98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 8KK8V96Q6B;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.barboss.visibility-agent";
+				PRODUCT_NAME = BarBossVisibilityAgent;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
 		};
 		99CB7322C5EF7B4037377A15 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -418,6 +586,15 @@
 			buildConfigurations = (
 				07B188BEEA63F54988A5FCDD /* Debug */,
 				99CB7322C5EF7B4037377A15 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B6D1CBD791B7F29D3AFB4CB1 /* Build configuration list for PBXNativeTarget "BarBossVisibilityAgent" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E8D835244A85005C92A3C99 /* Debug */,
+				881ACB6689F537CE12212C98 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
