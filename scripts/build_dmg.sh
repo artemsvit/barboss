@@ -65,26 +65,32 @@ plutil -replace SUEnableAutomaticChecks -bool YES "${APP_PATH}/Contents/Info.pli
 echo "Code signing BarBoss.app (ad-hoc)..."
 codesign --force --deep --sign - "${APP_PATH}"
 
-# 6. Prepare staging folder for DMG
-DMG_ROOT="${BUILD_DIR}/dmg_root"
-mkdir -p "${DMG_ROOT}"
-cp -R "${APP_PATH}" "${DMG_ROOT}/"
-ln -s /Applications "${DMG_ROOT}/Applications"
+# 6. Prepare staging folder for create-dmg
+DMG_STAGING="${BUILD_DIR}/dmg_staging"
+mkdir -p "${DMG_STAGING}"
+cp -R "${APP_PATH}" "${DMG_STAGING}/"
 
-if [ -f "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" ]; then
-    cp "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" "${DMG_ROOT}/.VolumeIcon.icns"
-fi
-
-# 7. Create DMG
+# 7. Create styled DMG
 DMG_OUTPUT="${BUILD_DIR}/BarBoss.dmg"
-echo "Creating disk image (UDZO compressed)..."
+echo "Creating styled DMG with create-dmg..."
 rm -f "${DMG_OUTPUT}"
-hdiutil create \
-    -volname "BarBoss" \
-    -srcfolder "${DMG_ROOT}" \
-    -ov \
-    -format UDZO \
-    "${DMG_OUTPUT}"
+
+create-dmg \
+    --volname "BarBoss" \
+    --volicon "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" \
+    --background "${ROOT_DIR}/scripts/dmg_background.png" \
+    --window-pos 200 120 \
+    --window-size 660 400 \
+    --icon-size 128 \
+    --text-size 13 \
+    --icon "BarBoss.app" 175 190 \
+    --app-drop-link 485 190 \
+    --hide-extension "BarBoss.app" \
+    --no-internet-enable \
+    --format UDZO \
+    --overwrite \
+    "${DMG_OUTPUT}" \
+    "${DMG_STAGING}"
 
 echo "=== DMG Build Complete! ==="
 echo "Artifact: ${DMG_OUTPUT}"
