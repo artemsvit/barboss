@@ -86,6 +86,42 @@ struct MenuBarSettingsTab: View {
     var body: some View {
         Form {
             Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "command")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundColor(.accentColor)
+                            .padding(6)
+                            .background(Color.accentColor.opacity(0.12))
+                            .clipShape(RoundedRectangle(cornerRadius: 6))
+                        Text("How to Hide Menu Bar Icons")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(alignment: .top, spacing: 8) {
+                            Text("1.").fontWeight(.bold).foregroundColor(.accentColor)
+                            Text("Hold the Command (⌘) key on your keyboard.")
+                        }
+                        HStack(alignment: .top, spacing: 8) {
+                            Text("2.").fontWeight(.bold).foregroundColor(.accentColor)
+                            Text("Click and drag any menu bar icon to the LEFT of the separator ( | ).")
+                        }
+                        HStack(alignment: .top, spacing: 8) {
+                            Text("3.").fontWeight(.bold).foregroundColor(.accentColor)
+                            Text("Click the BarBoss icon (🕶️) or press ⌘⇧B to collapse or reveal!")
+                        }
+                    }
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                }
+                .padding(.vertical, 4)
+            } header: {
+                Text("How to Hide Icons").font(.headline)
+            }
+            
+            Section {
                 Picker("Hiding Method:", selection: $prefs.hideMode) {
                     ForEach(HideMode.allCases) { mode in
                         VStack(alignment: .leading) {

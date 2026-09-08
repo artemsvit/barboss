@@ -28,6 +28,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Initialize Sparkle Updater
         _ = UpdateManager.shared
+        
+        // Show settings on first launch
+        let hasLaunchedBefore = UserDefaults.standard.bool(forKey: "BarBoss_hasLaunchedBefore")
+        if !hasLaunchedBefore {
+            UserDefaults.standard.set(true, forKey: "BarBoss_hasLaunchedBefore")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                SettingsWindowController.shared.showWindow()
+            }
+        }
     }
     
     func applicationWillTerminate(_ notification: Notification) {

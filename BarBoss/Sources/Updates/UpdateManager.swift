@@ -36,6 +36,11 @@ public final class UpdateManager: NSObject, ObservableObject, SPUUpdaterDelegate
         updaterController?.checkForUpdates(nil)
     }
     
+    // MARK: - SPUUpdaterDelegate
+    public func feedURLString(for updater: SPUUpdater) -> String? {
+        return "https://barboss.artsvit.com/appcast.xml"
+    }
+    
     public var automaticallyChecksForUpdates: Bool {
         get { updaterController?.updater.automaticallyChecksForUpdates ?? true }
         set { updaterController?.updater.automaticallyChecksForUpdates = newValue }

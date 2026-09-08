@@ -11,6 +11,7 @@
 		22E1848806CB51A90E15C14E /* FloatingBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */; };
 		37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D0050C4337E04D5E9FA5C /* SettingsView.swift */; };
 		4FAB9B7421F1E4C5D686F06D /* BarBossApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B751EFE760678A1B2D5143CA /* BarBossApp.swift */; };
+		6592B0FEBFDB0339B94B725F /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */; };
 		743CD257F6DA709CDD4BC73E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F674FD5192FE657B75B3224 /* Preferences.swift */; };
 		80F4402CE60F8C4D3401D3AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67438F5AF6680A9E39AABEFB /* Assets.xcassets */; };
 		94A59455C93EE6BAE646521A /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = D439C0B4648D26FEAB5CD81F /* Sparkle */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		128B483420AEEE8B168A9502 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1F674FD5192FE657B75B3224 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowController.swift; sourceTree = "<group>"; };
 		650D0050C4337E04D5E9FA5C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		67438F5AF6680A9E39AABEFB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 		93DAB4959B2C0BFB75F40AD8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				393BDDE49C76EAD0826DDBA3 /* AppIcon.icns */,
 				67438F5AF6680A9E39AABEFB /* Assets.xcassets */,
 				A0B3A5A4A2F00865B806A84C /* BarBoss.entitlements */,
 				128B483420AEEE8B168A9502 /* Info.plist */,
@@ -197,6 +200,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6592B0FEBFDB0339B94B725F /* AppIcon.icns in Resources */,
 				80F4402CE60F8C4D3401D3AE /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

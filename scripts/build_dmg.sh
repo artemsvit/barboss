@@ -47,17 +47,35 @@ fi
 
 echo "BarBoss.app built successfully at: ${APP_PATH}"
 
-# 4. Sign app and frameworks ad-hoc for local execution
+# 4. Ensure Resources and Info.plist are complete
+mkdir -p "${APP_PATH}/Contents/Resources"
+if [ -f "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" ]; then
+    cp "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" "${APP_PATH}/Contents/Resources/AppIcon.icns"
+fi
+
+echo "Enforcing Info.plist keys..."
+plutil -replace LSUIElement -bool YES "${APP_PATH}/Contents/Info.plist"
+plutil -replace CFBundleIconFile -string AppIcon "${APP_PATH}/Contents/Info.plist"
+plutil -replace CFBundleIconName -string AppIcon "${APP_PATH}/Contents/Info.plist"
+plutil -replace SUFeedURL -string "https://barboss.artsvit.com/appcast.xml" "${APP_PATH}/Contents/Info.plist"
+plutil -replace SUPublicEDKey -string "0000000000000000000000000000000000000000000=" "${APP_PATH}/Contents/Info.plist"
+plutil -replace SUEnableAutomaticChecks -bool YES "${APP_PATH}/Contents/Info.plist"
+
+# 5. Sign app and frameworks ad-hoc for local execution
 echo "Code signing BarBoss.app (ad-hoc)..."
 codesign --force --deep --sign - "${APP_PATH}"
 
-# 5. Prepare staging folder for DMG
+# 6. Prepare staging folder for DMG
 DMG_ROOT="${BUILD_DIR}/dmg_root"
 mkdir -p "${DMG_ROOT}"
 cp -R "${APP_PATH}" "${DMG_ROOT}/"
 ln -s /Applications "${DMG_ROOT}/Applications"
 
-# 6. Create DMG
+if [ -f "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" ]; then
+    cp "${ROOT_DIR}/BarBoss/Resources/AppIcon.icns" "${DMG_ROOT}/.VolumeIcon.icns"
+fi
+
+# 7. Create DMG
 DMG_OUTPUT="${BUILD_DIR}/BarBoss.dmg"
 echo "Creating disk image (UDZO compressed)..."
 rm -f "${DMG_OUTPUT}"

@@ -20,6 +20,14 @@ targets:
         product: Sparkle
     info:
       path: BarBoss/Resources/Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleIconFile: AppIcon
+        CFBundleIconName: AppIcon
+        SUFeedURL: https://barboss.artsvit.com/appcast.xml
+        SUPublicEDKey: 0000000000000000000000000000000000000000000=
+        SUEnableAutomaticChecks: true
+        NSHumanReadableCopyright: "Copyright © 2026 BarBoss. All rights reserved."
     entitlements:
       path: BarBoss/Resources/BarBoss.entitlements
     settings:
@@ -29,6 +37,7 @@ targets:
       CURRENT_PROJECT_VERSION: "1"
       ENABLE_HARDENED_RUNTIME: YES
       GENERATE_INFOPLIST_FILE: NO
+      INFOPLIST_FILE: BarBoss/Resources/Info.plist
       SWIFT_VERSION: "5.9"
       MACOSX_DEPLOYMENT_TARGET: "14.0"
       COMBINE_HIDPI_IMAGES: YES
