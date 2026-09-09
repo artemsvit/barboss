@@ -1,50 +1,33 @@
 import AppKit
 
-let inputPath = "/Users/artsvit/.gemini/antigravity/brain/7175be0c-0d73-495b-af61-441fa1c75d84/.user_uploaded/media_1788855900161.png"
-let altInputPath = "/Users/artsvit/.gemini/antigravity/brain/7175be0c-0d73-495b-af61-441fa1c75d84/.user_uploaded/media_1788855101075.png"
+let rootDir = FileManager.default.currentDirectoryPath
+let sourcePath = "\(rootDir)/appicon.png"
 
-let chosenPath = FileManager.default.fileExists(atPath: altInputPath) ? altInputPath : inputPath
-guard let rawImage = NSImage(contentsOfFile: chosenPath) else {
-    print("Failed to load icon image from \(chosenPath)")
+guard let rawImage = NSImage(contentsOfFile: sourcePath) else {
+    print("Failed to load icon image from \(sourcePath)")
     exit(1)
 }
 
-// Prepare iconset folder
-let iconsetDir = "/tmp/AppIcon.iconset"
+let iconsetDir = "/tmp/AppIcon_Native.iconset"
+let xcassetsDir = "\(rootDir)/BarBoss/Resources/Assets.xcassets"
+let appiconsetDir = "\(xcassetsDir)/AppIcon.appiconset"
+
 try? FileManager.default.removeItem(atPath: iconsetDir)
 try? FileManager.default.createDirectory(atPath: iconsetDir, withIntermediateDirectories: true)
+try? FileManager.default.createDirectory(atPath: appiconsetDir, withIntermediateDirectories: true)
 
-// Render squircle for macOS
-let canvasSize: CGFloat = 1024
-let squircle = NSImage(size: NSSize(width: canvasSize, height: canvasSize))
-squircle.lockFocus()
+// 1. Root Assets.xcassets Contents.json
+let rootContentsJson = """
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
+"""
+try? rootContentsJson.write(to: URL(fileURLWithPath: "\(xcassetsDir)/Contents.json"), atomically: true, encoding: .utf8)
 
-let rect = NSRect(x: 80, y: 80, width: 864, height: 864)
-let clip = NSBezierPath(roundedRect: rect, xRadius: 195, yRadius: 195)
-
-// Shadow
-let shadow = NSShadow()
-shadow.shadowColor = NSColor.black.withAlphaComponent(0.35)
-shadow.shadowOffset = NSSize(width: 0, height: -16)
-shadow.shadowBlurRadius = 24
-shadow.set()
-NSColor.black.setFill()
-clip.fill()
-
-// Draw image
-NSGraphicsContext.current?.saveGraphicsState()
-clip.addClip()
-rawImage.draw(in: rect, from: .zero, operation: .sourceOver, fraction: 1.0)
-
-// Subtle border
-NSColor.white.withAlphaComponent(0.2).setStroke()
-clip.lineWidth = 4
-clip.stroke()
-NSGraphicsContext.current?.restoreGraphicsState()
-
-squircle.unlockFocus()
-
-// Standard iconset files
+// 2. Full-bleed standard macOS iconset files (Apple HIG compliant, no artificial transparent insets)
 let iconSizes: [(String, CGFloat)] = [
     ("icon_16x16.png", 16),
     ("icon_16x16@2x.png", 32),
@@ -61,13 +44,47 @@ let iconSizes: [(String, CGFloat)] = [
 for (name, px) in iconSizes {
     let resized = NSImage(size: NSSize(width: px, height: px))
     resized.lockFocus()
-    squircle.draw(in: NSRect(x: 0, y: 0, width: px, height: px), from: .zero, operation: .copy, fraction: 1.0)
+    rawImage.draw(
+        in: NSRect(x: 0, y: 0, width: px, height: px),
+        from: NSRect(x: 0, y: 0, width: rawImage.size.width, height: rawImage.size.height),
+        operation: .copy,
+        fraction: 1.0
+    )
     resized.unlockFocus()
     if let tiff = resized.tiffRepresentation,
        let rep = NSBitmapImageRep(data: tiff),
        let png = rep.representation(using: .png, properties: [:]) {
         try? png.write(to: URL(fileURLWithPath: "\(iconsetDir)/\(name)"))
+        try? png.write(to: URL(fileURLWithPath: "\(appiconsetDir)/\(name)"))
     }
 }
 
-print("Iconset created successfully at \(iconsetDir)")
+// 3. AppIcon.appiconset Contents.json
+let appiconContentsJson = """
+{
+  "images" : [
+    { "filename" : "icon_16x16.png", "idiom" : "mac", "scale" : "1x", "size" : "16x16" },
+    { "filename" : "icon_16x16@2x.png", "idiom" : "mac", "scale" : "2x", "size" : "16x16" },
+    { "filename" : "icon_32x32.png", "idiom" : "mac", "scale" : "1x", "size" : "32x32" },
+    { "filename" : "icon_32x32@2x.png", "idiom" : "mac", "scale" : "2x", "size" : "32x32" },
+    { "filename" : "icon_128x128.png", "idiom" : "mac", "scale" : "1x", "size" : "128x128" },
+    { "filename" : "icon_128x128@2x.png", "idiom" : "mac", "scale" : "2x", "size" : "128x128" },
+    { "filename" : "icon_256x256.png", "idiom" : "mac", "scale" : "1x", "size" : "256x256" },
+    { "filename" : "icon_256x256@2x.png", "idiom" : "mac", "scale" : "2x", "size" : "256x256" },
+    { "filename" : "icon_512x512.png", "idiom" : "mac", "scale" : "1x", "size" : "512x512" },
+    { "filename" : "icon_512x512@2x.png", "idiom" : "mac", "scale" : "2x", "size" : "512x512" }
+  ],
+  "info" : { "author" : "xcode", "version" : 1 }
+}
+"""
+try? appiconContentsJson.write(to: URL(fileURLWithPath: "\(appiconsetDir)/Contents.json"), atomically: true, encoding: .utf8)
+
+// 4. Compile AppIcon.icns
+let icnsOutput = "\(rootDir)/BarBoss/Resources/AppIcon.icns"
+let proc = Process()
+proc.executableURL = URL(fileURLWithPath: "/usr/bin/iconutil")
+proc.arguments = ["-c", "icns", iconsetDir, "-o", icnsOutput]
+try? proc.run()
+proc.waitUntilExit()
+
+print("Full-bleed AppIcon set and AppIcon.icns created successfully!")

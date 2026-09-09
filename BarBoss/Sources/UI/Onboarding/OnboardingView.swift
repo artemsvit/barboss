@@ -214,7 +214,7 @@ public struct OnboardingView: View {
                     icon: "lock.shield.fill",
                     color: .green,
                     title: "100% Private & Native",
-                    description: "Engineered for macOS 27. Zero screen recording, zero tracking, effortless speed."
+                    description: "Engineered for macOS. Zero screen recording, zero tracking, effortless speed."
                 )
             }
             .padding(.horizontal, 28)

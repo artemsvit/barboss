@@ -51,9 +51,6 @@ struct GeneralSettingsTab: View {
                 Toggle("Launch BarBoss at login", isOn: $prefs.launchAtLogin)
                     .help("Automatically starts BarBoss when you log in to your Mac.")
                 
-                Toggle("Hide on click outside", isOn: $prefs.hideOnClickOutside)
-                    .help("Automatically hides menu items when you click elsewhere.")
-                
                 Toggle("Hover to reveal hidden items", isOn: $prefs.hoverToReveal)
                     .help("Move mouse cursor to the menu bar to automatically reveal items.")
             } header: {

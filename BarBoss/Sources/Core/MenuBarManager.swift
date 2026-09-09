@@ -1,5 +1,4 @@
 import AppKit
-import SwiftUI
 import Combine
 import Darwin
 import ObjectiveC.runtime
@@ -32,6 +31,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         let visibleCCKey = "NSStatusItem VisibleCC BarBoss_HiddenSeparator"
         UserDefaults.standard.removeObject(forKey: sepKey)
         UserDefaults.standard.removeObject(forKey: visibleCCKey)
+        syncMenuBarAgentPreferencesIfNeeded()
         
         let primaryKey = "NSStatusItem Preferred Position BarBoss_PrimaryItem"
         let currentPrimary = UserDefaults.standard.double(forKey: primaryKey)
@@ -39,7 +39,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             UserDefaults.standard.set(200.0, forKey: primaryKey)
         }
         UserDefaults.standard.synchronize()
-        syncMenuBarAgentPreferencesIfNeeded()
         
         // Primary BarBoss status item (Toggle & Menu)
         primaryStatusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -89,15 +88,26 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             showContextMenu()
             return
         }
-        
-        // Left click (or click without right/control modifier) toggles hidden items
+
+        // Native selected-item visibility is available starting with macOS 26.
+        // On older systems, open Settings so clicking BarBoss is never a no-op.
+        guard modernVisibilityController.isSupported else {
+            onOpenSettings?()
+            return
+        }
+
         toggleHiddenItems()
     }
     
     public func toggleHiddenItems() {
+        guard modernVisibilityController.isSupported else {
+            onOpenSettings?()
+            return
+        }
+
         let prefs = Preferences.shared
         prefs.isHidden.toggle()
-        
+
         updateItemStates()
         
         if !prefs.isHidden && prefs.autoHideDelay > 0 {
@@ -108,12 +118,21 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
     
     public func showHiddenItems() {
+        guard modernVisibilityController.isSupported else {
+            return
+        }
+
         if Preferences.shared.isHidden {
             toggleHiddenItems()
         }
     }
     
     public func hideHiddenItems() {
+        guard modernVisibilityController.isSupported else {
+            stopAutoHideTimer()
+            return
+        }
+
         if !Preferences.shared.isHidden {
             toggleHiddenItems()
         }
@@ -122,17 +141,17 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     public func updateItemStates() {
         updatePrimaryButtonAppearance()
         
-        let isHidden = Preferences.shared.isHidden
-
-        if modernVisibilityController.isSupported {
-            if isHidden {
-                modernVisibilityController.hide(
-                    bundleIdentifiers: Set(Preferences.shared.hiddenItemIdentifiers)
-                )
-            } else {
-                modernVisibilityController.showAll()
-            }
+        guard modernVisibilityController.isSupported else {
+            modernVisibilityController.showAll()
             return
+        }
+
+        if Preferences.shared.isHidden {
+            modernVisibilityController.hide(
+                bundleIdentifiers: Set(Preferences.shared.hiddenItemIdentifiers)
+            )
+        } else {
+            modernVisibilityController.showAll()
         }
     }
 
@@ -155,7 +174,11 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             button.imagePosition = .imageOnly
         }
         
-        button.toolTip = isHidden ? "BarBoss Glasses (Click to show hidden items)" : "BarBoss Glasses (Click to hide items)"
+        if modernVisibilityController.isSupported {
+            button.toolTip = isHidden ? "BarBoss Glasses (Click to show hidden items)" : "BarBoss Glasses (Click to hide items)"
+        } else {
+            button.toolTip = "BarBoss Glasses (Click to open Settings)"
+        }
     }
     
     private func startAutoHideTimer() {
@@ -179,27 +202,27 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         let menu = NSMenu()
         menu.delegate = self
         
-        // 1. Toggle Items
-        let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
-        let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
-        toggleItem.target = self
-        menu.addItem(toggleItem)
+        if modernVisibilityController.isSupported {
+            let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
+            let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
+            toggleItem.target = self
+            menu.addItem(toggleItem)
+            menu.addItem(NSMenuItem.separator())
+        }
         
-        menu.addItem(NSMenuItem.separator())
-        
-        // 2. Settings
+        // Settings
         let settingsItem = NSMenuItem(title: "Settings...", action: #selector(contextOpenSettings), keyEquivalent: ",")
         settingsItem.target = self
         menu.addItem(settingsItem)
         
-        // 3. Sparkle Check for Updates
+        // Sparkle Check for Updates
         let updatesItem = NSMenuItem(title: "Check for Updates...", action: #selector(contextCheckForUpdates), keyEquivalent: "")
         updatesItem.target = self
         menu.addItem(updatesItem)
         
         menu.addItem(NSMenuItem.separator())
         
-        // 4. Quit
+        // Quit
         let quitItem = NSMenuItem(title: "Quit BarBoss", action: #selector(contextQuit), keyEquivalent: "q")
         quitItem.target = self
         menu.addItem(quitItem)
@@ -229,7 +252,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
     
     private func syncMenuBarAgentPreferencesIfNeeded() {
-        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27 else { return }
+        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 else { return }
         let path = ("~/Library/Preferences/com.apple.MenuBarAgent.plist" as NSString).expandingTildeInPath
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url),
@@ -257,16 +280,15 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
 }
 
-/// Small runtime bridge for the menu-bar assessment service introduced with
-/// macOS 27. Keeping the bridge dynamic lets BarBoss continue to run on its
-/// existing macOS 14 deployment target.
+/// Runtime bridge for the menu-bar assessment service available on macOS 26+.
+/// Keeping it dynamic preserves the app's macOS 14 deployment target.
 final class ModernMenuBarVisibilityController {
     private var agentProcess: Process?
     private var lastHiddenBundleIdentifiers = Set<String>()
     private var lastRunningBundleIdentifiers = Set<String>()
 
     var isSupported: Bool {
-        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26
     }
 
     deinit {

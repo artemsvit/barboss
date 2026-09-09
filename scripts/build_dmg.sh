@@ -107,6 +107,8 @@ codesign --verify --deep --strict --verbose=2 "${APP_PATH}"
 DMG_STAGING="${BUILD_DIR}/dmg_staging"
 mkdir -p "${DMG_STAGING}"
 cp -R "${APP_PATH}" "${DMG_STAGING}/"
+rm -rf "${BUILD_DIR}/BarBoss.app"
+cp -R "${APP_PATH}" "${BUILD_DIR}/BarBoss.app"
 
 # 7. Create styled DMG
 DMG_OUTPUT="${BUILD_DIR}/BarBoss.dmg"

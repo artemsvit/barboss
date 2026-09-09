@@ -5,6 +5,13 @@
   "assets": {
     "directory": "./landing"
   },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "invocation_logs": true,
+      "persist": true
+    }
+  },
   "routes": [
     {
       "pattern": "barboss.artsvit.com",

@@ -39,8 +39,22 @@ final class AgentDelegate: NSObject, NSApplicationDelegate {
         )
         allowedBundleIdentifiers.subtract(hiddenBundleIDs)
         allowedBundleIdentifiers.formUnion([
-            "com.barboss.app", "BarBoss"
+            "com.barboss.app",
+            "BarBoss",
+            "com.barboss.visibility-agent",
+            "BarBossVisibilityAgent",
+            "com.apple.controlcenter",
+            "com.apple.MenuBarAgent",
+            "com.apple.systemuiserver"
         ])
+        if let ownID = Bundle.main.bundleIdentifier {
+            allowedBundleIdentifiers.insert(ownID)
+        }
+        if let parentPID = parentPID,
+           let parentApp = NSRunningApplication(processIdentifier: parentPID),
+           let parentBundleID = parentApp.bundleIdentifier {
+            allowedBundleIdentifiers.insert(parentBundleID)
+        }
 
         guard let configurationClass = NSClassFromString("MBAssessmentModeConfiguration"),
               let assertionClass = NSClassFromString("MBAssessmentModeAssertion"),
@@ -98,8 +112,18 @@ final class AgentDelegate: NSObject, NSApplicationDelegate {
 
     private func loadFramework() -> Bool {
         if frameworkHandle != nil { return true }
-        frameworkHandle = dlopen("/System/Library/PrivateFrameworks/MenuBarClientCore.framework/MenuBarClientCore", RTLD_NOW | RTLD_LOCAL)
-        return frameworkHandle != nil
+        let candidatePaths = [
+            "/System/Library/PrivateFrameworks/MenuBarClientCore.framework/MenuBarClientCore",
+            "/System/Library/PrivateFrameworks/MenuBarClientCore.framework/Versions/A/MenuBarClientCore",
+            "/System/Library/PrivateFrameworks/MenuBarClientCore.framework/Versions/Current/MenuBarClientCore"
+        ]
+        for path in candidatePaths {
+            if let handle = dlopen(path, RTLD_NOW | RTLD_LOCAL) {
+                frameworkHandle = handle
+                return true
+            }
+        }
+        return false
     }
 
     private static func parentPID(from arguments: [String]) -> pid_t? {

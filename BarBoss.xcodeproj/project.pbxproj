@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D07B175BB86BA2837FC251C /* HoverManager.swift */; };
 		20CEFEA44378AB583D1F24AA /* PermissionsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4531E8A874A35B7DC092391F /* PermissionsTab.swift */; };
-		22E1848806CB51A90E15C14E /* FloatingBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */; };
 		32051CB6D543B9056DBA4A5C /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */; };
 		37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D0050C4337E04D5E9FA5C /* SettingsView.swift */; };
 		37F2976CC5E523F55E08D18A /* KeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */; };
@@ -26,7 +25,6 @@
 		AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */; };
 		B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53577315E8F719E5ED5B48DA /* ItemManagerView.swift */; };
 		BF021F7512D861BAAEB1E808 /* OnboardingWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E983AA04178E873F6901D534 /* OnboardingWindowController.swift */; };
-		D3B21A8D12D409B4AFB6EEF8 /* FloatingBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */; };
 		DF2B6740D54F096D3E5B1C77 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2FAE175CCD97532A409E1B /* main.swift */; };
 		F67918E3E103F35BA6BBBAFB /* SettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E2CDAAFA06595AB9F1A0A2E /* SettingsWindowController.swift */; };
 		FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C548DD91941A1707AC940D6C /* MenuBarManager.swift */; };
@@ -71,7 +69,6 @@
 		9058D625F93FAC25D7B0270D /* BarBoss.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BarBoss.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D07B175BB86BA2837FC251C /* HoverManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManager.swift; sourceTree = "<group>"; };
 		A0B3A5A4A2F00865B806A84C /* BarBoss.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarBoss.entitlements; sourceTree = "<group>"; };
-		A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarView.swift; sourceTree = "<group>"; };
 		B751EFE760678A1B2D5143CA /* BarBossApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarBossApp.swift; sourceTree = "<group>"; };
 		C548DD91941A1707AC940D6C /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
 		D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
@@ -79,7 +76,6 @@
 		E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCombo.swift; sourceTree = "<group>"; };
 		E983AA04178E873F6901D534 /* OnboardingWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingWindowController.swift; sourceTree = "<group>"; };
 		F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarItemScanner.swift; sourceTree = "<group>"; };
-		F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingBarController.swift; sourceTree = "<group>"; };
 		FCC96F67184061F56DA86787 /* BarBossVisibilityAgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BarBossVisibilityAgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,14 +92,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		061AD9758F0B0918D9B593EB /* FloatingBar */ = {
-			isa = PBXGroup;
-			children = (
-				A528FF0847C0A5F4240B5E1B /* FloatingBarView.swift */,
-			);
-			path = FloatingBar;
-			sourceTree = "<group>";
-		};
 		276CC2493779F498F70CC25B /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,7 +133,6 @@
 		8E9FC978DE71F09C5BBF2561 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				F891E4CD04DD91D57DE88161 /* FloatingBarController.swift */,
 				FE7640B81F6FE7928BB8DC3D /* HotkeyManager.swift */,
 				9D07B175BB86BA2837FC251C /* HoverManager.swift */,
 				F18FA05E9DC0AE99ECE97378 /* MenuBarItemScanner.swift */,
@@ -210,7 +197,6 @@
 		F534EF521DC7AF6F632CD037 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				061AD9758F0B0918D9B593EB /* FloatingBar */,
 				4526D2A787B5D40F309CF37F /* Onboarding */,
 				276CC2493779F498F70CC25B /* Settings */,
 			);
@@ -317,8 +303,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4FAB9B7421F1E4C5D686F06D /* BarBossApp.swift in Sources */,
-				22E1848806CB51A90E15C14E /* FloatingBarController.swift in Sources */,
-				D3B21A8D12D409B4AFB6EEF8 /* FloatingBarView.swift in Sources */,
 				AEB010A055424ACE687BF7A8 /* HotkeyManager.swift in Sources */,
 				0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */,
 				B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */,
@@ -483,7 +467,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.barboss.visibility-agent";
 				PRODUCT_NAME = BarBossVisibilityAgent;
 				SDKROOT = macosx;
@@ -505,7 +489,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.barboss.visibility-agent";
 				PRODUCT_NAME = BarBossVisibilityAgent;
 				SDKROOT = macosx;

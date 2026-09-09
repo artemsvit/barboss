@@ -1,28 +1,6 @@
 import SwiftUI
 import ServiceManagement
 
-public enum HideMode: String, CaseIterable, Identifiable {
-    case inline = "inline"
-    case floatingBar = "floatingBar"
-    case both = "both"
-    
-    public var id: String { rawValue }
-    public var title: String {
-        switch self {
-        case .inline: return "Inline Menu Bar"
-        case .floatingBar: return "BarBoss Bar"
-        case .both: return "Both (Menu Bar & BarBoss Bar)"
-        }
-    }
-    public var description: String {
-        switch self {
-        case .inline: return "Collapses and expands items directly in the top menu bar."
-        case .floatingBar: return "Hides items from the menu bar and shows them in the BarBoss Bar."
-        case .both: return "Expands items in the top bar and also displays the BarBoss Bar."
-        }
-    }
-}
-
 public enum MenuBarIconStyle: String, CaseIterable, Identifiable {
     case glasses = "glasses"
     
@@ -63,9 +41,7 @@ public final class Preferences: ObservableObject {
     
     private enum Keys {
         static let isHidden = "BarBoss_isHidden"
-        static let hideMode = "BarBoss_hideMode"
         static let autoHideDelay = "BarBoss_autoHideDelay"
-        static let hideOnClickOutside = "BarBoss_hideOnClickOutside"
         static let hoverToReveal = "BarBoss_hoverToReveal"
         static let showAlwaysHiddenSection = "BarBoss_showAlwaysHiddenSection"
         static let menuBarIconStyle = "BarBoss_menuBarIconStyle"
@@ -81,16 +57,8 @@ public final class Preferences: ObservableObject {
         didSet { defaults.set(isHidden, forKey: Keys.isHidden) }
     }
     
-    @Published public var hideMode: HideMode {
-        didSet { defaults.set(hideMode.rawValue, forKey: Keys.hideMode) }
-    }
-    
     @Published public var autoHideDelay: Double {
         didSet { defaults.set(autoHideDelay, forKey: Keys.autoHideDelay) }
-    }
-    
-    @Published public var hideOnClickOutside: Bool {
-        didSet { defaults.set(hideOnClickOutside, forKey: Keys.hideOnClickOutside) }
     }
     
     @Published public var hoverToReveal: Bool {
@@ -128,10 +96,7 @@ public final class Preferences: ObservableObject {
     private init() {
         self.isHidden = defaults.object(forKey: Keys.isHidden) != nil ? defaults.bool(forKey: Keys.isHidden) : false
         
-        self.hideMode = .inline
-        
         self.autoHideDelay = defaults.object(forKey: Keys.autoHideDelay) != nil ? defaults.double(forKey: Keys.autoHideDelay) : 5.0
-        self.hideOnClickOutside = defaults.object(forKey: Keys.hideOnClickOutside) != nil ? defaults.bool(forKey: Keys.hideOnClickOutside) : true
         self.hoverToReveal = defaults.bool(forKey: Keys.hoverToReveal)
         self.showAlwaysHiddenSection = defaults.bool(forKey: Keys.showAlwaysHiddenSection)
         

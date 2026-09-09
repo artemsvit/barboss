@@ -79,9 +79,8 @@ public final class MenuBarItemScanner: ObservableObject {
         var items: [DiscoveredMenuBarItem] = []
         var seenBundleIds = Set<String>()
         
-        // 1. Fast direct scan from MenuBarAgent on macOS 27+
-        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27,
-           let mba = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == "com.apple.MenuBarAgent" }) {
+        // 1. Direct scan from MenuBarAgent (macOS 27+)
+        if let mba = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == "com.apple.MenuBarAgent" }) {
             let root = AXUIElementCreateApplication(mba.processIdentifier)
             var windowsRef: CFTypeRef?
             if AXUIElementCopyAttributeValue(root, kAXChildrenAttribute as CFString, &windowsRef) == .success,
@@ -188,94 +187,4 @@ public final class MenuBarItemScanner: ObservableObject {
         return items.sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
     
-    public func activateApp(bundleIdentifier: String, processIdentifier: pid_t? = nil) {
-        if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier }),
-           let modernRoot = modernMenuBarRoot(),
-           let applicationElement = nestedApplication(named: app.localizedName ?? "", in: modernRoot),
-           let menuExtra = firstMenuExtra(in: applicationElement, maximumDepth: 5) {
-            AXUIElementPerformAction(menuExtra, kAXPressAction as CFString)
-            return
-        }
-
-        if let pid = processIdentifier, pid > 0 {
-            let appElement = AXUIElementCreateApplication(pid)
-            if let menuExtra = firstMenuExtra(in: appElement, maximumDepth: 5) {
-                AXUIElementPerformAction(menuExtra, kAXPressAction as CFString)
-                return
-            }
-        }
-        
-        if let app = NSWorkspace.shared.runningApplications.first(where: { $0.bundleIdentifier == bundleIdentifier }) {
-            app.activate(options: .activateIgnoringOtherApps)
-        }
-    }
-
-    private func modernMenuBarRoot() -> AXUIElement? {
-        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27,
-              let app = NSWorkspace.shared.runningApplications.first(where: {
-                  $0.bundleIdentifier == "com.apple.MenuBarAgent"
-              }) else { return nil }
-        return AXUIElementCreateApplication(app.processIdentifier)
-    }
-
-    private func collectNestedApplicationNames(
-        in element: AXUIElement,
-        depth: Int,
-        names: inout Set<String>
-    ) {
-        guard depth <= 8 else { return }
-        // MenuBarAgent only nests application elements for processes that own
-        // a status item. Some items (including Display Pilot) expose an empty
-        // menu-extra subtree, so the application node itself is authoritative.
-        if depth > 0,
-           attribute(kAXRoleAttribute, from: element) == kAXApplicationRole,
-           let name = attribute(kAXTitleAttribute, from: element),
-           !name.isEmpty {
-            names.insert(name)
-        }
-        for child in children(of: element) {
-            collectNestedApplicationNames(in: child, depth: depth + 1, names: &names)
-        }
-    }
-
-    private func nestedApplication(named name: String, in element: AXUIElement, depth: Int = 0) -> AXUIElement? {
-        guard depth <= 8 else { return nil }
-        if depth > 0,
-           attribute(kAXRoleAttribute, from: element) == kAXApplicationRole,
-           attribute(kAXTitleAttribute, from: element) == name {
-            return element
-        }
-        for child in children(of: element) {
-            if let result = nestedApplication(named: name, in: child, depth: depth + 1) {
-                return result
-            }
-        }
-        return nil
-    }
-
-    private func firstMenuExtra(in element: AXUIElement, maximumDepth: Int) -> AXUIElement? {
-        guard maximumDepth >= 0 else { return nil }
-        if attribute(kAXSubroleAttribute, from: element) == "AXMenuExtra" {
-            return element
-        }
-        for child in children(of: element) {
-            if let result = firstMenuExtra(in: child, maximumDepth: maximumDepth - 1) {
-                return result
-            }
-        }
-        return nil
-    }
-
-    private func children(of element: AXUIElement) -> [AXUIElement] {
-        var value: AnyObject?
-        guard AXUIElementCopyAttributeValue(element, kAXChildrenAttribute as CFString, &value) == .success,
-              let children = value as? [AXUIElement] else { return [] }
-        return children
-    }
-
-    private func attribute(_ name: String, from element: AXUIElement) -> String? {
-        var value: AnyObject?
-        guard AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success else { return nil }
-        return value as? String
-    }
 }

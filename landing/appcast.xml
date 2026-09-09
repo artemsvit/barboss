@@ -8,7 +8,7 @@
     <item>
       <title>BarBoss 1.0.2</title>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <pubDate>Tue, 08 Sep 2026 15:31:24 +0000</pubDate>
+      <pubDate>Wed, 09 Sep 2026 12:47:02 +0000</pubDate>
       <description><![CDATA[
         <h2>BarBoss 1.0.2</h2>
         <p>Sparkle updates now advertise this build, and the DMG installer shows a drag arrow into Applications.</p>
@@ -21,8 +21,8 @@
       <enclosure url="https://barboss.artsvit.com/BarBoss.dmg"
                  sparkle:version="3"
                  sparkle:shortVersionString="1.0.2"
-                 sparkle:edSignature="z7S6diC8CzfLBrxJd7PA7OFVAE2NjUsVb9t/u2E+dE4mFnv/w0IZGbGKmm72mfPjeKX8d2cxtr+PLOaCWr9vAQ=="
-                 length="9034521"
+                 sparkle:edSignature="bWsk5ODl9eh0YUuK8GKkl+Pt4QzgH7crBf32/28u7LiEIDpnYdd8hJOaliDog0Sg1lNkGVbErfgpqXhbTKdICg=="
+                 length="7969318"
                  type="application/octet-stream" />
     </item>
   </channel>
