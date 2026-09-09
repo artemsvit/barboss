@@ -7,9 +7,8 @@
 ## Features
 
 - **Menu Bar Management**:
-  - **Inline Mode**: Collapses and reveals hidden menu bar items directly in the top bar. Use `⌘-drag` to position any macOS or third-party status items behind the BarBoss separator.
-  - **BarBoss Bar (Floating Bar)**: Slides down a translucent secondary bar beneath the menu bar / notch, providing quick access and a search field without cluttering your primary bar.
-  - **Always-Hidden Section**: An optional extra separator (`‖`) for utility icons you never need to see.
+  - **macOS 27**: Choose individual apps in BarBoss and hide or reveal them automatically.
+  - **macOS 14–26**: Use native `⌘-drag` placement behind the BarBoss separator, then click the glasses to hide or reveal the group.
 - **Fast Access & Triggers**:
   - Click to toggle or right-click / control-click for the context menu.
   - **Global Hotkey**: Press `⌘ + Shift + B` from any app to toggle hidden items instantly.

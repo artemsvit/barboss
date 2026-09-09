@@ -6,23 +6,24 @@
     <description>Most recent updates to BarBoss.</description>
     <language>en</language>
     <item>
-      <title>BarBoss 1.0.2</title>
+      <title>BarBoss 1.0.3</title>
       <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-      <pubDate>Wed, 09 Sep 2026 12:47:02 +0000</pubDate>
+      <pubDate>Wed, 09 Sep 2026 13:53:14 +0000</pubDate>
       <description><![CDATA[
-        <h2>BarBoss 1.0.2</h2>
-        <p>Sparkle updates now advertise this build, and the DMG installer shows a drag arrow into Applications.</p>
+        <h2>BarBoss 1.0.3</h2>
+        <p>BarBoss now provides the right setup experience for every supported macOS version.</p>
         <ul>
-          <li>Sparkle feed now ships the current short version and build number</li>
-          <li>Updates are signed with the BarBoss EdDSA key</li>
-          <li>DMG window includes a clear arrow from BarBoss to Applications</li>
+          <li>Automatic per-app selection remains available on macOS 27</li>
+          <li>macOS 14–26 now includes clear native Command-drag setup guidance</li>
+          <li>Clicking the BarBoss glasses hides and reveals the manually arranged group</li>
+          <li>The DMG includes a clear drag arrow from BarBoss to Applications</li>
         </ul>
       ]]></description>
       <enclosure url="https://barboss.artsvit.com/BarBoss.dmg"
-                 sparkle:version="3"
-                 sparkle:shortVersionString="1.0.2"
-                 sparkle:edSignature="bWsk5ODl9eh0YUuK8GKkl+Pt4QzgH7crBf32/28u7LiEIDpnYdd8hJOaliDog0Sg1lNkGVbErfgpqXhbTKdICg=="
-                 length="7969318"
+                 sparkle:version="4"
+                 sparkle:shortVersionString="1.0.3"
+                 sparkle:edSignature="V9nAekvEcYoFwI0Sa2f7w7jpUlS2xtjebSTVEyDL9p341kXAokdwCJKCXn6KXkDSz5yeOeHZHevMxGIThuE7Aw=="
+                 length="8349433"
                  type="application/octet-stream" />
     </item>
   </channel>

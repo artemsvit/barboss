@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D07B175BB86BA2837FC251C /* HoverManager.swift */; };
 		20CEFEA44378AB583D1F24AA /* PermissionsTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4531E8A874A35B7DC092391F /* PermissionsTab.swift */; };
+		263A62606578F4C4838D88EF /* LegacyMenuBarSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD56A813D169B33E8C7655F4 /* LegacyMenuBarSetupView.swift */; };
 		32051CB6D543B9056DBA4A5C /* PermissionsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */; };
 		37561BC9E0456F5BB5A42D6C /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650D0050C4337E04D5E9FA5C /* SettingsView.swift */; };
 		37F2976CC5E523F55E08D18A /* KeyCombo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CD8C2B58132B98510F5BEF /* KeyCombo.swift */; };
@@ -70,6 +71,7 @@
 		9D07B175BB86BA2837FC251C /* HoverManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HoverManager.swift; sourceTree = "<group>"; };
 		A0B3A5A4A2F00865B806A84C /* BarBoss.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BarBoss.entitlements; sourceTree = "<group>"; };
 		B751EFE760678A1B2D5143CA /* BarBossApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BarBossApp.swift; sourceTree = "<group>"; };
+		BD56A813D169B33E8C7655F4 /* LegacyMenuBarSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegacyMenuBarSetupView.swift; sourceTree = "<group>"; };
 		C548DD91941A1707AC940D6C /* MenuBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarManager.swift; sourceTree = "<group>"; };
 		D0E6B8C0DC8C739260CA8C7C /* PermissionsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsManager.swift; sourceTree = "<group>"; };
 		DC2FAE175CCD97532A409E1B /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -199,8 +201,17 @@
 			children = (
 				4526D2A787B5D40F309CF37F /* Onboarding */,
 				276CC2493779F498F70CC25B /* Settings */,
+				FC971465E399D95BA8F0DB7C /* Shared */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		FC971465E399D95BA8F0DB7C /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				BD56A813D169B33E8C7655F4 /* LegacyMenuBarSetupView.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -307,6 +318,7 @@
 				0EF66A91F08EF3ED06E625AE /* HoverManager.swift in Sources */,
 				B6C361F6E251CAADDE98B402 /* ItemManagerView.swift in Sources */,
 				37F2976CC5E523F55E08D18A /* KeyCombo.swift in Sources */,
+				263A62606578F4C4838D88EF /* LegacyMenuBarSetupView.swift in Sources */,
 				3D888FBA0C412ED6EAA54278 /* MenuBarItemScanner.swift in Sources */,
 				FEFDC9B769B6810AA89B16C1 /* MenuBarManager.swift in Sources */,
 				38FAA6FBDAF216D7354A39A9 /* OnboardingView.swift in Sources */,
@@ -410,7 +422,7 @@
 				CODE_SIGN_ENTITLEMENTS = BarBoss/Resources/BarBoss.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 8KK8V96Q6B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -420,7 +432,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.barboss.app;
 				PRODUCT_NAME = BarBoss;
 				SDKROOT = macosx;
@@ -435,7 +447,7 @@
 				CODE_SIGN_ENTITLEMENTS = BarBoss/Resources/BarBoss.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = 8KK8V96Q6B;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -445,7 +457,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.barboss.app;
 				PRODUCT_NAME = BarBoss;
 				SDKROOT = macosx;

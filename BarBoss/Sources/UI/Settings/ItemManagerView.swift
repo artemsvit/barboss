@@ -16,6 +16,14 @@ public struct ItemManagerView: View {
     }
     
     public var body: some View {
+        if MenuBarManager.supportsAutomaticItemSelection {
+            automaticSelectionView
+        } else {
+            LegacyMenuBarSetupView()
+        }
+    }
+
+    private var automaticSelectionView: some View {
         VStack(spacing: 10) {
             // Permissions Warning Banner if not granted
             if !permissions.hasAllPermissions {
@@ -53,22 +61,6 @@ public struct ItemManagerView: View {
                 .padding(.horizontal, 4)
             }
 
-            if ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 27 {
-                HStack(spacing: 8) {
-                    Image(systemName: "command")
-                        .foregroundColor(.blue)
-                    Text("macOS 26: BarBoss arranges selected icons behind the | separator. Keep Accessibility enabled so selections can be positioned automatically.")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                    Spacer(minLength: 0)
-                }
-                .padding(8)
-                .background(Color.blue.opacity(0.08))
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .padding(.horizontal, 4)
-            }
-            
             // 2-Sided Panel
             HStack(spacing: 14) {
                 // LEFT SIDE: Shown in Menu Bar

@@ -5,7 +5,36 @@ public struct PermissionsTab: View {
     
     public init() {}
     
+    @ViewBuilder
     public var body: some View {
+        if MenuBarManager.supportsAutomaticItemSelection {
+            automaticPermissionsView
+        } else {
+            Form {
+                Section {
+                    Label {
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text("No Permissions Required")
+                                .font(.system(size: 13, weight: .semibold))
+                            Text("On macOS 14–26, BarBoss uses native Command-drag menu bar arrangement and does not need Accessibility access.")
+                                .font(.system(size: 11))
+                                .foregroundColor(.secondary)
+                        }
+                    } icon: {
+                        Image(systemName: "checkmark.shield.fill")
+                            .font(.system(size: 22))
+                            .foregroundColor(.green)
+                    }
+                    .padding(.vertical, 6)
+                } header: {
+                    Text("System Permissions")
+                }
+            }
+            .formStyle(.grouped)
+        }
+    }
+
+    private var automaticPermissionsView: some View {
         Form {
             Section {
                 VStack(alignment: .leading, spacing: 6) {

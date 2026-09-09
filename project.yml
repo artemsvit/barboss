@@ -42,8 +42,8 @@ targets:
     settings:
       PRODUCT_NAME: BarBoss
       PRODUCT_BUNDLE_IDENTIFIER: com.barboss.app
-      MARKETING_VERSION: "1.0.2"
-      CURRENT_PROJECT_VERSION: "3"
+      MARKETING_VERSION: "1.0.3"
+      CURRENT_PROJECT_VERSION: "4"
       DEVELOPMENT_TEAM: 8KK8V96Q6B
       CODE_SIGN_IDENTITY: "Developer ID Application: Artem Svitelskyi (8KK8V96Q6B)"
       ENABLE_HARDENED_RUNTIME: YES

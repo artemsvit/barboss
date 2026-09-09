@@ -183,11 +183,12 @@ cat > "${APPCAST_PATH}" <<EOF
       <pubDate>${PUBDATE}</pubDate>
       <description><![CDATA[
         <h2>BarBoss ${APP_VERSION}</h2>
-        <p>Sparkle updates now advertise this build, and the DMG installer shows a drag arrow into Applications.</p>
+        <p>BarBoss now provides the right setup experience for every supported macOS version.</p>
         <ul>
-          <li>Sparkle feed now ships the current short version and build number</li>
-          <li>Updates are signed with the BarBoss EdDSA key</li>
-          <li>DMG window includes a clear arrow from BarBoss to Applications</li>
+          <li>Automatic per-app selection remains available on macOS 27</li>
+          <li>macOS 14–26 now includes clear native Command-drag setup guidance</li>
+          <li>Clicking the BarBoss glasses hides and reveals the manually arranged group</li>
+          <li>The DMG includes a clear drag arrow from BarBoss to Applications</li>
         </ul>
       ]]></description>
       <enclosure url="https://barboss.artsvit.com/BarBoss.dmg"

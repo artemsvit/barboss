@@ -1,12 +1,13 @@
 import AppKit
 import Combine
-import Darwin
 import ObjectiveC.runtime
 import OSLog
-import ApplicationServices
 
 public final class MenuBarManager: NSObject, NSMenuDelegate {
     public static let shared = MenuBarManager()
+    public static var supportsAutomaticItemSelection: Bool {
+        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 27
+    }
     
     private var primaryStatusItem: NSStatusItem!
     private var legacySeparatorItem: NSStatusItem?
@@ -14,7 +15,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     private var autoHideTimer: Timer?
     private var cancellables = Set<AnyCancellable>()
     private let modernVisibilityController = ModernMenuBarVisibilityController()
-    private let legacyItemArranger = LegacyMenuBarItemArranger()
     private let logger = Logger(subsystem: "com.barboss.app", category: "MenuBarVisibility")
     
     public var onOpenSettings: (() -> Void)?
@@ -92,9 +92,8 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         
         prefs.$hiddenItemIdentifiers
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] identifiers in
+            .sink { [weak self] _ in
                 self?.updateItemStates()
-                self?.arrangeLegacyItemsIfNeeded(identifiers)
             }
             .store(in: &cancellables)
 
@@ -107,7 +106,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         .sink { [weak self] _ in
             self?.updateItemStates()
             MenuBarItemScanner.shared.scanItems()
-            self?.arrangeLegacyItemsIfNeeded(Preferences.shared.hiddenItemIdentifiers)
         }
         .store(in: &cancellables)
     }
@@ -119,28 +117,15 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             return
         }
 
-        // Native selected-item visibility is available starting with macOS 26.
-        // On older systems, open Settings so clicking BarBoss is never a no-op.
-        guard modernVisibilityController.isSupported else {
-            onOpenSettings?()
-            return
-        }
-
         toggleHiddenItems()
     }
     
     public func toggleHiddenItems() {
-        guard modernVisibilityController.isSupported else {
-            onOpenSettings?()
-            return
-        }
-
         let prefs = Preferences.shared
         prefs.isHidden.toggle()
 
         logger.info("Toggle requested: hidden=\(prefs.isHidden, privacy: .public), selectedItems=\(prefs.hiddenItemIdentifiers.count, privacy: .public)")
         updateItemStates()
-        arrangeLegacyItemsIfNeeded(prefs.hiddenItemIdentifiers)
         
         if !prefs.isHidden && prefs.autoHideDelay > 0 {
             startAutoHideTimer()
@@ -198,19 +183,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         logger.info("Applied separator visibility: hidden=\(isHidden, privacy: .public), length=\(item.length, privacy: .public)")
     }
 
-    private func arrangeLegacyItemsIfNeeded(_ identifiers: [String]) {
-        guard !modernVisibilityController.isSupported,
-              let legacySeparatorItem else { return }
-
-        legacyItemArranger.arrangeIfNeeded(
-            selectedBundleIdentifiers: Set(identifiers),
-            separatorItem: legacySeparatorItem,
-            shouldRestoreHiddenState: Preferences.shared.isHidden
-        ) { [weak self] message in
-            self?.logger.info("\(message, privacy: .public)")
-        }
-    }
-
     public func stop() {
         stopAutoHideTimer()
         modernVisibilityController.showAll()
@@ -234,11 +206,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
             button.imagePosition = .imageOnly
         }
         
-        if modernVisibilityController.isSupported {
-            button.toolTip = isHidden ? "BarBoss Glasses (Click to show hidden items)" : "BarBoss Glasses (Click to hide items)"
-        } else {
-            button.toolTip = "BarBoss Glasses (Click to open Settings)"
-        }
+        button.toolTip = isHidden ? "BarBoss Glasses (Click to show hidden items)" : "BarBoss Glasses (Click to hide items)"
     }
     
     private func startAutoHideTimer() {
@@ -262,13 +230,11 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
         let menu = NSMenu()
         menu.delegate = self
         
-        if modernVisibilityController.isSupported {
-            let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
-            let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
-            toggleItem.target = self
-            menu.addItem(toggleItem)
-            menu.addItem(NSMenuItem.separator())
-        }
+        let toggleTitle = Preferences.shared.isHidden ? "Show Items" : "Hide Items"
+        let toggleItem = NSMenuItem(title: toggleTitle, action: #selector(contextToggleHiddenItems), keyEquivalent: "")
+        toggleItem.target = self
+        menu.addItem(toggleItem)
+        menu.addItem(NSMenuItem.separator())
         
         // Settings
         let settingsItem = NSMenuItem(title: "Settings...", action: #selector(contextOpenSettings), keyEquivalent: ",")
@@ -312,7 +278,7 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
     
     private func syncMenuBarAgentPreferencesIfNeeded() {
-        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 else { return }
+        guard Self.supportsAutomaticItemSelection else { return }
         let path = ("~/Library/Preferences/com.apple.MenuBarAgent.plist" as NSString).expandingTildeInPath
         let url = URL(fileURLWithPath: path)
         guard let data = try? Data(contentsOf: url),
@@ -340,263 +306,6 @@ public final class MenuBarManager: NSObject, NSMenuDelegate {
     }
 }
 
-/// On macOS 26 there is no per-bundle visibility assertion. This arranger uses
-/// the system's Command-drag interaction to put only selected apps on the
-/// hidden side of BarBoss's separator.
-final class LegacyMenuBarItemArranger {
-    private var pendingWorkItem: DispatchWorkItem?
-    private var lastSignature = ""
-
-    func arrangeIfNeeded(
-        selectedBundleIdentifiers: Set<String>,
-        separatorItem: NSStatusItem,
-        shouldRestoreHiddenState: Bool,
-        log: @escaping (String) -> Void
-    ) {
-        let runningSelected = NSWorkspace.shared.runningApplications
-            .compactMap(\.bundleIdentifier)
-            .filter(selectedBundleIdentifiers.contains)
-            .sorted()
-        let signature = runningSelected.isEmpty ? "<none>" : runningSelected.joined(separator: "|")
-        guard signature != lastSignature else { return }
-
-        pendingWorkItem?.cancel()
-        let workItem = DispatchWorkItem { [weak self, weak separatorItem] in
-            guard let self, let separatorItem else { return }
-            self.performArrangement(
-                bundleIdentifiers: runningSelected,
-                separatorItem: separatorItem,
-                shouldRestoreHiddenState: shouldRestoreHiddenState,
-                log: log
-            )
-        }
-        pendingWorkItem = workItem
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: workItem)
-    }
-
-    private func performArrangement(
-        bundleIdentifiers: [String],
-        separatorItem: NSStatusItem,
-        shouldRestoreHiddenState: Bool,
-        log: @escaping (String) -> Void
-    ) {
-        guard AXIsProcessTrusted() else {
-            log("Cannot arrange selected macOS 26 icons: Accessibility permission is missing")
-            return
-        }
-
-        separatorItem.length = NSStatusItem.variableLength
-        separatorItem.button?.title = " | "
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { [weak self, weak separatorItem] in
-            guard let self, let separatorItem else { return }
-            guard let separator = self.separatorFrame(for: separatorItem) else {
-                self.restore(separatorItem, hidden: shouldRestoreHiddenState)
-                log("The macOS 26 separator frame is unavailable")
-                return
-            }
-
-            let allItems = self.allThirdPartyMenuExtras()
-            let leftEdge = allItems.map(\.frame.minX).min() ?? separator.minX
-            let separatorDestination = CGPoint(
-                x: max(24, leftEdge - separator.width - 12),
-                y: separator.midY
-            )
-
-            self.commandDrag(from: separator.center, to: separatorDestination)
-            self.moveSelectedItems(
-                bundleIdentifiers: bundleIdentifiers,
-                index: 0,
-                separatorItem: separatorItem,
-                restoreHidden: shouldRestoreHiddenState,
-                log: log
-            )
-        }
-    }
-
-    private func moveSelectedItems(
-        bundleIdentifiers: [String],
-        index: Int,
-        separatorItem: NSStatusItem,
-        restoreHidden: Bool,
-        log: @escaping (String) -> Void
-    ) {
-        guard index < bundleIdentifiers.count else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self, weak separatorItem] in
-                guard let self, let separatorItem else { return }
-                let selectedItems = self.menuExtras(forBundleIdentifiers: bundleIdentifiers)
-                let positionedCount: Int
-                if let separator = self.separatorFrame(for: separatorItem) {
-                    positionedCount = selectedItems.filter { $0.frame.midX < separator.midX }.count
-                } else {
-                    positionedCount = 0
-                }
-                if positionedCount == selectedItems.count {
-                    self.lastSignature = bundleIdentifiers.isEmpty
-                        ? "<none>"
-                        : bundleIdentifiers.joined(separator: "|")
-                }
-                self.restore(separatorItem, hidden: restoreHidden)
-                log("Positioned \(positionedCount) of \(selectedItems.count) selected macOS 26 menu-bar icon(s) behind the separator")
-            }
-            return
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18) { [weak self, weak separatorItem] in
-            guard let self, let separatorItem else { return }
-            let bundleIdentifier = bundleIdentifiers[index]
-            if let item = self.menuExtras(forBundleIdentifiers: [bundleIdentifier]).first,
-               let separator = self.separatorFrame(for: separatorItem) {
-                let destination = CGPoint(
-                    x: max(12, separator.minX - item.frame.width / 2 - 6),
-                    y: separator.midY
-                )
-                self.commandDrag(from: item.frame.center, to: destination)
-            }
-            self.moveSelectedItems(
-                bundleIdentifiers: bundleIdentifiers,
-                index: index + 1,
-                separatorItem: separatorItem,
-                restoreHidden: restoreHidden,
-                log: log
-            )
-        }
-    }
-
-    private func restore(_ separatorItem: NSStatusItem, hidden: Bool) {
-        if hidden {
-            separatorItem.button?.title = ""
-            separatorItem.length = 10_000
-        } else {
-            separatorItem.length = NSStatusItem.variableLength
-            separatorItem.button?.title = " | "
-        }
-    }
-
-    private func commandDrag(from source: CGPoint, to destination: CGPoint) {
-        guard let down = CGEvent(
-            mouseEventSource: nil,
-            mouseType: .leftMouseDown,
-            mouseCursorPosition: source,
-            mouseButton: .left
-        ), let dragged = CGEvent(
-            mouseEventSource: nil,
-            mouseType: .leftMouseDragged,
-            mouseCursorPosition: destination,
-            mouseButton: .left
-        ), let up = CGEvent(
-            mouseEventSource: nil,
-            mouseType: .leftMouseUp,
-            mouseCursorPosition: destination,
-            mouseButton: .left
-        ) else { return }
-
-        down.flags = .maskCommand
-        down.post(tap: .cghidEventTap)
-        usleep(40_000)
-        dragged.flags = .maskCommand
-        dragged.post(tap: .cghidEventTap)
-        usleep(60_000)
-        up.flags = .maskCommand
-        up.post(tap: .cghidEventTap)
-    }
-
-    private struct MenuExtra {
-        let frame: CGRect
-    }
-
-    private func separatorFrame(for separatorItem: NSStatusItem) -> CGRect? {
-        guard let cocoaFrame = separatorItem.button?.window?.frame else { return nil }
-        let mainDisplayHeight = CGDisplayBounds(CGMainDisplayID()).height
-        return CGRect(
-            x: cocoaFrame.minX,
-            y: mainDisplayHeight - cocoaFrame.maxY,
-            width: cocoaFrame.width,
-            height: cocoaFrame.height
-        )
-    }
-
-    private func menuExtras(forBundleIdentifiers identifiers: [String]) -> [MenuExtra] {
-        let identifiers = Set(identifiers)
-        return NSWorkspace.shared.runningApplications
-            .filter { app in
-                guard let bundleIdentifier = app.bundleIdentifier else { return false }
-                return identifiers.contains(bundleIdentifier)
-            }
-            .flatMap { app in
-                menuExtras(for: AXUIElementCreateApplication(app.processIdentifier))
-                    .map { MenuExtra(frame: $0.frame) }
-            }
-    }
-
-    private func allThirdPartyMenuExtras() -> [MenuExtra] {
-        NSWorkspace.shared.runningApplications
-            .filter { app in
-                guard let id = app.bundleIdentifier else { return false }
-                return !id.hasPrefix("com.apple.") && id != "com.barboss.app"
-            }
-            .flatMap { app in
-                menuExtras(for: AXUIElementCreateApplication(app.processIdentifier))
-                    .map { MenuExtra(frame: $0.frame) }
-            }
-    }
-
-    private func menuExtras(for root: AXUIElement) -> [(frame: CGRect, title: String)] {
-        var result: [(CGRect, String)] = []
-        collectMenuExtras(in: root, depth: 0, result: &result)
-        return result
-    }
-
-    private func collectMenuExtras(
-        in element: AXUIElement,
-        depth: Int,
-        result: inout [(CGRect, String)]
-    ) {
-        guard depth <= 7 else { return }
-        if attribute(kAXSubroleAttribute, from: element) == "AXMenuExtra",
-           let frame = frame(of: element), frame.width > 0, frame.height > 0 {
-            result.append((frame, attribute(kAXTitleAttribute, from: element) ?? ""))
-        }
-        for child in children(of: element) {
-            collectMenuExtras(in: child, depth: depth + 1, result: &result)
-        }
-    }
-
-    private func children(of element: AXUIElement) -> [AXUIElement] {
-        var value: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(element, kAXChildrenAttribute as CFString, &value) == .success,
-              let children = value as? [AXUIElement] else { return [] }
-        return children
-    }
-
-    private func attribute(_ name: String, from element: AXUIElement) -> String? {
-        var value: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(element, name as CFString, &value) == .success else { return nil }
-        return value as? String
-    }
-
-    private func frame(of element: AXUIElement) -> CGRect? {
-        var positionValue: CFTypeRef?
-        var sizeValue: CFTypeRef?
-        guard AXUIElementCopyAttributeValue(element, kAXPositionAttribute as CFString, &positionValue) == .success,
-              AXUIElementCopyAttributeValue(element, kAXSizeAttribute as CFString, &sizeValue) == .success,
-              let rawPosition = positionValue,
-              let rawSize = sizeValue,
-              CFGetTypeID(rawPosition) == AXValueGetTypeID(),
-              CFGetTypeID(rawSize) == AXValueGetTypeID() else { return nil }
-
-        var position = CGPoint.zero
-        var size = CGSize.zero
-        guard AXValueGetValue(rawPosition as! AXValue, .cgPoint, &position),
-              AXValueGetValue(rawSize as! AXValue, .cgSize, &size) else { return nil }
-        return CGRect(origin: position, size: size)
-    }
-}
-
-private extension CGRect {
-    var center: CGPoint { CGPoint(x: midX, y: midY) }
-}
-
 /// Small runtime bridge for the menu-bar assessment service introduced with
 /// macOS 27. Keeping the bridge dynamic lets BarBoss continue to run on its
 /// existing macOS 14 deployment target.
@@ -606,7 +315,7 @@ final class ModernMenuBarVisibilityController {
     private var lastRunningBundleIdentifiers = Set<String>()
 
     var isSupported: Bool {
-        ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26
+        MenuBarManager.supportsAutomaticItemSelection
     }
 
     deinit {

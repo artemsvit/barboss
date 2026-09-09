@@ -127,7 +127,7 @@ public struct OnboardingView: View {
                             }
                         }) {
                             HStack(spacing: 6) {
-                                Text(permissions.isAccessibilityGranted ? "Continue" : "Skip for Now")
+                                Text(!MenuBarManager.supportsAutomaticItemSelection || permissions.isAccessibilityGranted ? "Continue" : "Skip for Now")
                                     .fontWeight(.semibold)
                                 Image(systemName: "arrow.right")
                                     .font(.system(size: 11, weight: .bold))
@@ -136,7 +136,7 @@ public struct OnboardingView: View {
                             .padding(.vertical, 7)
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(permissions.isAccessibilityGranted ? .orange : .secondary)
+                        .tint(!MenuBarManager.supportsAutomaticItemSelection || permissions.isAccessibilityGranted ? .orange : .secondary)
                         .controlSize(.regular)
                     } else {
                         Button(action: {
@@ -226,7 +226,46 @@ public struct OnboardingView: View {
     }
     
     // MARK: - Step 2: Permissions
+    @ViewBuilder
     private var permissionsStepView: some View {
+        if MenuBarManager.supportsAutomaticItemSelection {
+            automaticPermissionsStepView
+        } else {
+            VStack(spacing: 18) {
+                ZStack {
+                    Circle()
+                        .fill(Color.green.opacity(0.12))
+                        .frame(width: 72, height: 72)
+                    Image(systemName: "checkmark.shield.fill")
+                        .font(.system(size: 34))
+                        .foregroundColor(.green)
+                }
+
+                VStack(spacing: 6) {
+                    Text("No Permissions Needed")
+                        .font(.system(size: 22, weight: .bold))
+                    Text("On macOS 14–26, BarBoss uses the menu bar’s built-in Command-drag arrangement. It does not need Accessibility access.")
+                        .font(.system(size: 12.5))
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 38)
+                }
+
+                Label("Next, you’ll arrange the icons you want BarBoss to hide.", systemImage: "command")
+                    .font(.system(size: 12, weight: .medium))
+                    .padding(14)
+                    .frame(maxWidth: .infinity)
+                    .background(Color(NSColor.controlBackgroundColor))
+                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                    .padding(.horizontal, 32)
+
+                Spacer(minLength: 0)
+            }
+            .padding(.top, 18)
+        }
+    }
+
+    private var automaticPermissionsStepView: some View {
         VStack(spacing: 14) {
             // Permissions Icon Hero (Clean, no glow)
             ZStack {
@@ -348,7 +387,16 @@ public struct OnboardingView: View {
     }
     
     // MARK: - Step 3: Choose Apps to Hide (Aligned with Settings & Onboarding style)
+    @ViewBuilder
     private var selectAppsStepView: some View {
+        if MenuBarManager.supportsAutomaticItemSelection {
+            automaticSelectAppsStepView
+        } else {
+            LegacyMenuBarSetupView(compact: true)
+        }
+    }
+
+    private var automaticSelectAppsStepView: some View {
         VStack(spacing: 10) {
             // Header Typography
             VStack(spacing: 4) {
