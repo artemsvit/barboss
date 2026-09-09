@@ -25,6 +25,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // Start Hotkey and Hover managers
         HotkeyManager.shared.start()
         HoverManager.shared.start()
+
+#if DEBUG
+        // Exercises the same path used by the status-item click without
+        // changing the user's final visibility state.
+        if CommandLine.arguments.contains("--verify-toggle") {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                MenuBarManager.shared.toggleHiddenItems()
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                MenuBarManager.shared.toggleHiddenItems()
+            }
+        }
+#endif
         
         // Initialize Sparkle Updater
         _ = UpdateManager.shared

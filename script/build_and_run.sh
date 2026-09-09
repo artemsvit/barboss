@@ -15,6 +15,7 @@ if [[ -z "${DEVELOPER_DIR:-}" && -d /Applications/Xcode-beta.app/Contents/Develo
 fi
 
 pkill -x "$APP_NAME" >/dev/null 2>&1 || true
+pkill -x "BarBossVisibilityAgent" >/dev/null 2>&1 || true
 
 xcodebuild \
   -project "$ROOT_DIR/BarBoss.xcodeproj" \
@@ -37,15 +38,15 @@ case "$MODE" in
     ;;
   --logs|logs)
     open_app
-    /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\""
+    /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\" OR process == \"BarBossVisibilityAgent\""
     ;;
   --telemetry|telemetry)
     open_app
-    /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\""
+    /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\" OR process == \"$APP_NAME\" OR process == \"BarBossVisibilityAgent\""
     ;;
   --verify|verify)
-    open_app
-    sleep 1
+    /usr/bin/open -n "$APP_BUNDLE" --args --verify-toggle
+    sleep 2
     pgrep -x "$APP_NAME" >/dev/null
     ;;
   *)
