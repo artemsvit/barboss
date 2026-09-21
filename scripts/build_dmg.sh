@@ -183,12 +183,11 @@ cat > "${APPCAST_PATH}" <<EOF
       <pubDate>${PUBDATE}</pubDate>
       <description><![CDATA[
         <h2>BarBoss ${APP_VERSION}</h2>
-        <p>BarBoss now provides the right setup experience for every supported macOS version.</p>
+        <p>BarBoss 1.0.4 refines setup and shortcuts across supported macOS versions.</p>
         <ul>
-          <li>Automatic per-app selection remains available on macOS 27</li>
-          <li>macOS 14–26 now includes clear native Command-drag setup guidance</li>
-          <li>Clicking the BarBoss glasses hides and reveals the manually arranged group</li>
-          <li>The DMG includes a clear drag arrow from BarBoss to Applications</li>
+          <li>macOS 14–26 setup is clearer and only shows relevant settings</li>
+          <li>The default BarBoss shortcut is now Control–Option–Command–B to avoid browser conflicts</li>
+          <li>Updated landing page, privacy link, and installer experience</li>
         </ul>
       ]]></description>
       <enclosure url="https://barboss.artsvit.com/BarBoss.dmg"

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — BarBoss</title>
+
+  <meta name="title" content="Privacy Policy — BarBoss">
+  <meta name="description"
+    content="BarBoss privacy policy. BarBoss is a 100% offline macOS menu bar manager: no accounts, no analytics, no telemetry, and no data ever leaves your Mac.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://barboss.artsvit.com/privacy.html">
+  <meta name="theme-color" content="#07080a">
+  <meta name="apple-mobile-web-app-title" content="BarBoss">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://barboss.artsvit.com/privacy.html">
+  <meta property="og:site_name" content="BarBoss">
+  <meta property="og:title" content="Privacy Policy — BarBoss">
+  <meta property="og:description"
+    content="BarBoss is a 100% offline macOS menu bar manager: no accounts, no analytics, no telemetry, and no data ever leaves your Mac.">
+  <meta property="og:image" content="https://barboss.artsvit.com/og-image.png">
+  <meta property="og:locale" content="en_US">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy Policy — BarBoss">
+  <meta name="twitter:description"
+    content="BarBoss is a 100% offline macOS menu bar manager: no accounts, no analytics, no telemetry, and no data ever leaves your Mac.">
+  <meta name="twitter:image" content="https://barboss.artsvit.com/og-image.png">
+
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+
+  <style>
+    :root {
+      --bg: #07080a;
+      --card-bg: #0f1015;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-border-hover: rgba(255, 255, 255, 0.16);
+      --text: #ffffff;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #f59e0b;
+      --accent-glow: rgba(245, 158, 11, 0.35);
+      --accent-blue: #0a84ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      overflow-x: hidden;
+      width: 100%;
+      max-width: 100vw;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
+      background-color: var(--bg);
+      background-image:
+        radial-gradient(circle at 50% -10%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
+        radial-gradient(circle at 80% 30%, rgba(10, 132, 255, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 20% 40%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Header (matches index.html) */
+    header {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      width: calc(100% - 48px);
+      max-width: 1132px;
+      background: rgba(15, 16, 21, 0.82);
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 9999px;
+      box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+    }
+
+    .nav-container {
+      width: 100%;
+      padding: 8px 14px 8px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: -0.01em;
+      transition: opacity 0.15s;
+    }
+
+    .brand:hover {
+      opacity: 0.9;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .brand-tagline {
+      font-weight: 400;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding-left: 14px;
+      margin-left: 2px;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 860px) {
+      .brand-tagline {
+        display: none;
+      }
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-actions a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.15s ease;
+    }
+
+    .nav-actions a:hover {
+      color: #fff;
+    }
+
+    .btn-nav-download {
+      background: #ffffff;
+      color: #000000 !important;
+      font-weight: 600 !important;
+      font-size: 0.84rem !important;
+      padding: 7px 16px;
+      border-radius: 999px;
+      box-shadow: 0 2px 10px rgba(255, 255, 255, 0.15);
+      transition: all 0.15s ease;
+    }
+
+    .btn-nav-download:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Document content */
+    .doc {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 140px 24px 80px;
+    }
+
+    .doc-header {
+      margin-bottom: 44px;
+    }
+
+    .doc-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #e2e8f0;
+      margin-bottom: 20px;
+    }
+
+    .doc-eyebrow .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+    }
+
+    .doc h1 {
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 14px;
+      color: #ffffff;
+    }
+
+    .doc-meta {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .doc-lede {
+      margin-top: 20px;
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      max-width: 640px;
+    }
+
+    .doc-toc {
+      margin: 36px 0 8px;
+      padding: 18px 20px;
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+    }
+
+    .doc-toc-title {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+    }
+
+    .doc-toc ol {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 20px;
+    }
+
+    @media (max-width: 560px) {
+      .doc-toc ol {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .doc-toc a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.15s ease;
+    }
+
+    .doc-toc a:hover {
+      color: #ffffff;
+    }
+
+    .doc section {
+      margin: 44px 0;
+      scroll-margin-top: 100px;
+    }
+
+    .doc section h2 {
+      font-size: 1.3rem;
+      font-weight: 650;
+      letter-spacing: -0.015em;
+      color: #ffffff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .doc section h2 .num {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .doc section p {
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+
+    .doc section p:last-child {
+      margin-bottom: 0;
+    }
+
+    .doc section ul {
+      margin: 0 0 14px 0;
+      padding-left: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .doc section ul li {
+      position: relative;
+      padding-left: 26px;
+      color: var(--text-muted);
+      font-size: 0.96rem;
+      line-height: 1.6;
+    }
+
+    .doc section ul li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: rgba(245, 158, 11, 0.55);
+    }
+
+    .doc section ul li b,
+    .doc section p b {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .callout {
+      display: flex;
+      gap: 14px;
+      padding: 18px 20px;
+      background: rgba(16, 185, 129, 0.06);
+      border: 1px solid rgba(16, 185, 129, 0.22);
+      border-radius: 14px;
+      margin: 18px 0;
+    }
+
+    .callout svg {
+      flex-shrink: 0;
+      color: #10b981;
+      margin-top: 2px;
+    }
+
+    .callout p {
+      margin: 0;
+      color: #d1fae5;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .doc a.inline-link {
+      color: #38bdf8;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .doc a.inline-link:hover {
+      color: #7dd3fc;
+    }
+
+    hr.doc-divider {
+      border: none;
+      border-top: 1px solid var(--card-border);
+      margin: 48px 0;
+    }
+
+    /* Footer (matches index.html) */
+    footer {
+      max-width: 1132px;
+      margin: 0 auto;
+      padding: 30px 24px 60px;
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    footer a:hover {
+      color: #fff;
+    }
+
+    .links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .links span {
+      color: var(--text-dim);
+    }
+
+    .links span a {
+      color: var(--text-muted);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .links span a:hover {
+      color: #ffffff;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        top: 10px;
+        width: calc(100% - 20px);
+      }
+
+      .nav-container {
+        padding: 6px 12px 6px 8px;
+      }
+
+      .btn-nav-download {
+        padding: 6px 14px;
+        font-size: 0.8rem !important;
+      }
+
+      .nav-actions a:not(.btn-nav-download) {
+        display: none;
+      }
+
+      .doc {
+        padding: 104px 18px 56px;
+      }
+
+      .doc section h2 {
+        font-size: 1.15rem;
+      }
+
+      footer {
+        margin: 40px auto 0;
+        padding: 20px 16px 36px;
+        flex-direction: column;
+        text-align: center;
+        gap: 14px;
+      }
+
+      .links {
+        justify-content: center;
+        gap: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <header id="mainHeader">
+    <div class="nav-container">
+      <a href="/" class="brand">
+        <img src="header-icon.png" alt="BarBoss">
+        <span>BarBoss</span>
+        <span class="brand-tagline">Icons, know your place.</span>
+      </a>
+      <div class="nav-actions">
+        <a href="/">Home</a>
+        <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
+        <a href="/BarBoss.dmg" class="btn-nav-download">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="doc">
+      <div class="doc-header">
+        <div class="doc-eyebrow">
+          <span class="badge-dot"></span>
+          Privacy-first by design
+        </div>
+        <h1>Privacy Policy</h1>
+        <div class="doc-meta">Effective date: September 21, 2026 · Applies to BarBoss for macOS, all versions</div>
+        <p class="doc-lede">
+          BarBoss is a native macOS menu bar manager built to run entirely on your Mac. This page explains,
+          in plain language, exactly what that means for your data — because the short version is: there
+          isn't any to explain.
+        </p>
+      </div>
+
+      <div class="callout">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="m9 12 2 2 4-4" />
+        </svg>
+        <p>
+          BarBoss does not collect, transmit, sell, or share any personal data, usage analytics, or
+          telemetry. There is no account, no server backend, and no tracking of any kind. Everything BarBoss
+          does happens locally on your Mac.
+        </p>
+      </div>
+
+      <div class="doc-toc">
+        <div class="doc-toc-title">On this page</div>
+        <ol>
+          <li><a href="#data-we-collect">1. Data we collect</a></li>
+          <li><a href="#local-storage">2. What's stored on your Mac</a></li>
+          <li><a href="#permissions">3. macOS permissions</a></li>
+          <li><a href="#updates">4. Automatic updates</a></li>
+          <li><a href="#third-parties">5. Third-party services</a></li>
+          <li><a href="#security">6. Security</a></li>
+          <li><a href="#children">7. Children's privacy</a></li>
+          <li><a href="#changes">8. Changes to this policy</a></li>
+          <li><a href="#contact">9. Contact</a></li>
+        </ol>
+      </div>
+
+      <section id="data-we-collect">
+        <h2><span class="num">1</span>Data we collect</h2>
+        <p><b>None.</b> BarBoss does not include any analytics SDK, crash reporter, advertising identifier, or
+          telemetry pipeline. It does not know who you are, cannot identify your Mac beyond what macOS itself
+          reports to any application, and never phones home with usage data.</p>
+        <p>Specifically, BarBoss does not collect:</p>
+        <ul>
+          <li>Your name, email address, or any account information — BarBoss has no accounts.</li>
+          <li>Which apps or icons you choose to hide, reorder, or keep visible.</li>
+          <li>Keystrokes, clipboard contents, screen contents, or browsing activity.</li>
+          <li>Device identifiers, advertising IDs, or location data.</li>
+          <li>Crash logs or diagnostic reports (macOS may generate its own local ones; BarBoss never sees them).</li>
+        </ul>
+      </section>
+
+      <section id="local-storage">
+        <h2><span class="num">2</span>What's stored on your Mac</h2>
+        <p>BarBoss saves a small set of preferences using Apple's standard <code>UserDefaults</code> system,
+          identical to how any native Mac app remembers its settings. This includes things like:</p>
+        <ul>
+          <li>Which menu bar icons you've grouped as "always visible" vs. "hidden."</li>
+          <li>Your chosen auto-hide delay, hover-to-reveal setting, and global keyboard shortcut.</li>
+          <li>Whether BarBoss launches automatically at login.</li>
+        </ul>
+        <p>This data is stored only in your local macOS user account, is never bundled into a file BarBoss
+          sends anywhere, and is removed if you delete the app along with its preferences file.</p>
+      </section>
+
+      <section id="permissions">
+        <h2><span class="num">3</span>macOS permissions</h2>
+        <p>BarBoss asks for the minimum macOS permission required for the feature it's providing, and only on
+          the macOS versions where that feature needs it:</p>
+        <ul>
+          <li><b>macOS 26 and earlier</b> — BarBoss needs no special permissions at all. Icon arrangement uses
+            macOS's own native Command-drag menu bar behavior, so no Accessibility access is requested and
+            no Permissions tab is even shown in Settings.</li>
+          <li><b>macOS 27 and later</b> — Apple's automatic menu bar item selection requires
+            <b>Accessibility</b> access so BarBoss can programmatically show and hide other apps' menu bar
+            icons. This permission is used exclusively for that purpose — arranging icon visibility — and
+            is never used to read, log, or transmit what those icons display, nor to monitor input from
+            other applications.
+          </li>
+        </ul>
+        <p>You can review or revoke this permission at any time in
+          <span class="inline-link" style="color:#f1f5f9;">System Settings → Privacy &amp; Security →
+            Accessibility</span>. Revoking it simply disables automatic hiding; it does not affect any other
+          part of macOS.
+        </p>
+      </section>
+
+      <section id="updates">
+        <h2><span class="num">4</span>Automatic updates</h2>
+        <p>BarBoss uses the open-source <a class="inline-link" href="https://sparkle-project.org/"
+            target="_blank" rel="noopener">Sparkle</a> framework to check for new versions. When it checks,
+          your Mac makes a standard, anonymous web request to
+          <code>barboss.artsvit.com/appcast.xml</code> to see the latest available version and download link.
+        </p>
+        <p>That request includes only what any ordinary web request includes — your IP address and basic
+          request metadata captured in standard web server logs — and optionally your current app version
+          and macOS version so the right update can be offered. No personal identifiers, usage data, or
+          BarBoss settings are ever included. You can disable automatic update checks entirely in
+          <b>Settings → Updates</b>.</p>
+      </section>
+
+      <section id="third-parties">
+        <h2><span class="num">5</span>Third-party services</h2>
+        <p>BarBoss is free and open-source. The only external services involved in distributing and updating
+          it are:</p>
+        <ul>
+          <li><b>GitHub</b> — hosts the BarBoss source code and release history at
+            <a class="inline-link" href="https://github.com/artemsvit/barboss" target="_blank"
+              rel="noopener">github.com/artemsvit/barboss</a>. Visiting GitHub is subject to
+            <a class="inline-link" href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+              target="_blank" rel="noopener">GitHub's own privacy policy</a>.</li>
+          <li><b>This website</b> (barboss.artsvit.com) — a static site that serves the download and this
+            policy. It does not run analytics scripts, advertising pixels, or third-party trackers. Your web
+            host or CDN may keep standard anonymized access logs for security and abuse prevention, as is
+            typical of any website.</li>
+        </ul>
+        <p>BarBoss itself, once installed, makes no network requests other than the optional Sparkle update
+          check described above.</p>
+      </section>
+
+      <section id="security">
+        <h2><span class="num">6</span>Security</h2>
+        <p>Because BarBoss never collects or transmits personal data, there is no BarBoss-controlled server
+          or database holding your information to secure. The app is code-signed and notarized by Apple, and
+          distributed only through this official site and GitHub Releases — always verify you've downloaded
+          it from one of those two sources.</p>
+      </section>
+
+      <section id="children">
+        <h2><span class="num">7</span>Children's privacy</h2>
+        <p>BarBoss is a general-purpose macOS utility, not directed at children, and does not knowingly
+          collect information from anyone — adults or children — because it does not collect information at
+          all.</p>
+      </section>
+
+      <section id="changes">
+        <h2><span class="num">8</span>Changes to this policy</h2>
+        <p>If this policy ever changes — for example, if a future version of BarBoss introduces a new feature
+          that involves data — the "Effective date" above will be updated and the change will be described
+          on this page and in the release notes for that version. We will never retroactively reduce your
+          privacy without clearly calling it out.</p>
+      </section>
+
+      <section id="contact">
+        <h2><span class="num">9</span>Contact</h2>
+        <p>Questions about this policy or how BarBoss handles permissions? Open an issue on
+          <a class="inline-link" href="https://github.com/artemsvit/barboss/issues" target="_blank"
+            rel="noopener">GitHub Issues</a>, or reach the developer through
+          <a class="inline-link" href="https://artsvit.com" target="_blank" rel="noopener">artsvit.com</a>.
+        </p>
+      </section>
+
+      <hr class="doc-divider">
+      <p style="color: var(--text-dim); font-size: 0.85rem;">
+        BarBoss is developed independently by Artem Svitelskyi and is not affiliated with or endorsed by
+        Apple Inc.
+      </p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div>© 2026 BarBoss. Clean menu bar management for macOS.</div>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
+      <a href="https://github.com/artemsvit/barboss/releases" target="_blank">Releases</a>
+      <a href="/privacy.html">Privacy</a>
+      <span>Developed by <a href="https://artsvit.com" target="_blank" rel="noopener">Artem Svitelskyi</a></span>
+    </div>
+  </footer>
+
+</body>
+
+</html>

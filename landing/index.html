@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" prefix="og: https://ogp.me/ns#">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>BarBoss — The Minimal Menu Bar Manager for macOS</title>
-  
+
   <!-- Primary Meta Tags -->
   <meta name="title" content="BarBoss — The Minimal Menu Bar Manager for macOS">
-  <meta name="description" content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
-  <meta name="keywords" content="macOS menu bar, menu bar manager, hide menu bar icons, bartender alternative, mac utility, menu bar hider, swiftui mac app, macos productivity">
+  <meta name="description"
+    content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
+  <meta name="keywords"
+    content="macOS menu bar, menu bar manager, hide menu bar icons, bartender alternative, mac utility, menu bar hider, swiftui mac app, macos productivity">
   <meta name="author" content="Artem Svitelskyi">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://barboss.artsvit.com/">
@@ -23,7 +26,8 @@
   <meta property="og:url" content="https://barboss.artsvit.com/">
   <meta property="og:site_name" content="BarBoss">
   <meta property="og:title" content="BarBoss — The Minimal Menu Bar Manager for macOS">
-  <meta property="og:description" content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
+  <meta property="og:description"
+    content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
   <meta property="og:image" content="https://barboss.artsvit.com/og-image.png">
   <meta property="og:image:secure_url" content="https://barboss.artsvit.com/og-image.png">
   <meta property="og:image:type" content="image/png">
@@ -36,7 +40,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://barboss.artsvit.com/">
   <meta name="twitter:title" content="BarBoss — The Minimal Menu Bar Manager for macOS">
-  <meta name="twitter:description" content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
+  <meta name="twitter:description"
+    content="BarBoss is a lightweight, blazing-fast menu bar manager for macOS. Organize, reorder, and hide menu bar icons with zero clutter and zero hassle.">
   <meta name="twitter:image" content="https://barboss.artsvit.com/og-image.png">
   <meta name="twitter:image:width" content="1200">
   <meta name="twitter:image:height" content="630">
@@ -72,7 +77,7 @@
       "url": "https://artsvit.com"
     },
     "downloadUrl": "https://barboss.artsvit.com/BarBoss.dmg",
-    "softwareVersion": "1.0.3"
+    "softwareVersion": "1.0.4"
   }
   </script>
   <style>
@@ -95,7 +100,8 @@
       padding: 0;
     }
 
-    html, body {
+    html,
+    body {
       overflow-x: hidden;
       width: 100%;
       max-width: 100vw;
@@ -104,7 +110,7 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", system-ui, sans-serif;
       background-color: var(--bg);
-      background-image: 
+      background-image:
         radial-gradient(circle at 50% -10%, rgba(245, 158, 11, 0.12) 0%, transparent 60%),
         radial-gradient(circle at 80% 30%, rgba(10, 132, 255, 0.04) 0%, transparent 50%),
         radial-gradient(circle at 20% 40%, rgba(245, 158, 11, 0.04) 0%, transparent 50%);
@@ -130,7 +136,8 @@
       border-radius: 9999px;
       box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.55), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
       transition: border-color 0.25s ease, box-shadow 0.25s ease;
-      overflow: hidden; /* Clips the internal X-ray reflection strictly inside the rounded capsule */
+      overflow: hidden;
+      /* Clips the internal X-ray reflection strictly inside the rounded capsule */
     }
 
     /* Inside-header X-Ray Scanner & Dog Reflection */
@@ -175,7 +182,8 @@
       align-items: center;
       justify-content: space-between;
       position: relative;
-      z-index: 2; /* Keeps brand, nav links and download button above the X-ray bones */
+      z-index: 2;
+      /* Keeps brand, nav links and download button above the X-ray bones */
     }
 
     .brand {
@@ -195,10 +203,25 @@
     }
 
     .brand img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .brand-tagline {
+      font-weight: 400;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      padding-left: 14px;
+      margin-left: 2px;
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 860px) {
+      .brand-tagline {
+        display: none;
+      }
     }
 
     .nav-actions {
@@ -409,7 +432,7 @@
       padding: 13px 28px;
       border-radius: 999px;
       text-decoration: none;
-      box-shadow: 
+      box-shadow:
         inset 0 1px 1px rgba(255, 255, 255, 0.8),
         0 4px 20px rgba(255, 255, 255, 0.15),
         0 1px 2px rgba(0, 0, 0, 0.3);
@@ -419,7 +442,7 @@
     .btn-download:hover {
       background: #f4f4f5;
       transform: translateY(-1px);
-      box-shadow: 
+      box-shadow:
         inset 0 1px 1px rgba(255, 255, 255, 0.9),
         0 8px 30px rgba(255, 255, 255, 0.25),
         0 2px 4px rgba(0, 0, 0, 0.4);
@@ -493,7 +516,7 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 22px;
       overflow: hidden;
-      box-shadow: 
+      box-shadow:
         0 30px 90px -10px rgba(0, 0, 0, 0.92),
         0 0 0 1px rgba(255, 255, 255, 0.06) inset;
       transition: border-color 0.25s ease;
@@ -757,13 +780,20 @@
       vertical-align: middle;
     }
 
-    .kbd-inline + .kbd-inline {
+    .kbd-inline+.kbd-inline {
       margin-left: 4px;
+    }
+
+    .shortcut-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
     }
 
     /* Footer */
     footer {
-      max-width: 900px;
+      max-width: 1132px;
       margin: 0 auto;
       padding: 30px 24px 60px;
       border-top: 1px solid var(--card-border);
@@ -963,6 +993,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- Navigation -->
@@ -975,12 +1006,14 @@
 
     <div class="nav-container">
       <a href="#" class="brand">
-        <img src="appicon.png" alt="BarBoss">
+        <img src="header-icon.png" alt="BarBoss">
         <span>BarBoss</span>
+        <span class="brand-tagline">Icons, know your place.</span>
       </a>
       <div class="nav-actions">
         <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
         <a href="https://github.com/artemsvit/barboss/releases" target="_blank">Releases</a>
+        <a href="/privacy.html">Privacy</a>
         <a href="/BarBoss.dmg" class="btn-nav-download">Download</a>
       </div>
     </div>
@@ -996,23 +1029,25 @@
 
       <h1>The minimal menu bar manager<br class="desktop-break"> <span class="hero-gradient-text">for macOS.</span></h1>
       <p class="tagline">
-        Combine, organize, and hide top bar icons with speed and simplicity. 
+        Combine, organize, and hide top bar icons with speed and simplicity.
         Automatic app selection on macOS 27, with native Command-drag setup on macOS 14–26.
       </p>
 
       <div class="cta-container">
         <div class="cta-buttons">
           <a href="/BarBoss.dmg" class="btn-download">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="7 10 12 15 17 10" />
+              <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
-            Download BarBoss 1.0.3 (DMG)
+            Download BarBoss 1.0.4 (DMG)
           </a>
           <a href="https://github.com/artemsvit/barboss" class="btn-secondary" target="_blank">
             <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
             </svg>
             GitHub
           </a>
@@ -1046,32 +1081,37 @@
               <div class="hidden-group" id="demoHiddenGroup" title="Hidden icons — collapsed by BarBoss">
                 <!-- Cloud Sync Icon -->
                 <span class="mac-icon-item" title="Cloud Drive">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z" />
                   </svg>
                 </span>
                 <!-- Audio Icon -->
                 <span class="mac-icon-item" title="Audio Player">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M3 18v-6a9 9 0 0 1 18 0v6"/>
-                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                    <path
+                      d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
                   </svg>
                 </span>
                 <!-- Terminal / Dev Tools Icon -->
                 <span class="mac-icon-item" title="Terminal">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="4 17 10 11 4 5"/>
-                    <line x1="12" y1="19" x2="20" y2="19"/>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="4 17 10 11 4 5" />
+                    <line x1="12" y1="19" x2="20" y2="19" />
                   </svg>
                 </span>
                 <!-- Keep Awake / Coffee Icon -->
                 <span class="mac-icon-item" title="Keep Awake">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
-                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
-                    <line x1="6" y1="1" x2="6" y2="4"/>
-                    <line x1="10" y1="1" x2="10" y2="4"/>
-                    <line x1="14" y1="1" x2="14" y2="4"/>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                    <line x1="6" y1="1" x2="6" y2="4" />
+                    <line x1="10" y1="1" x2="10" y2="4" />
+                    <line x1="14" y1="1" x2="14" y2="4" />
                   </svg>
                 </span>
               </div>
@@ -1079,7 +1119,8 @@
               <!-- Primary Toggle (Apple SF Symbol Sunglasses: Outline in Hided state, Filled in Show state) -->
               <div class="barboss-item" id="demoBarBossToggle" title="Click to hide icons">
                 <svg width="22" height="11" viewBox="0 0 40 14" fill="currentColor">
-                  <path id="demoGlassesPath" fill-rule="evenodd" clip-rule="evenodd" d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z"/>
+                  <path id="demoGlassesPath" fill-rule="evenodd" clip-rule="evenodd"
+                    d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z" />
                 </svg>
               </div>
 
@@ -1087,27 +1128,29 @@
               <div class="system-icons">
                 <!-- Wi-Fi -->
                 <span class="mac-icon-item" title="Wi-Fi">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M5 12.55a11 11 0 0 1 14.08 0"/>
-                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                    <line x1="12" y1="20" x2="12.01" y2="20"/>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12.55a11 11 0 0 1 14.08 0" />
+                    <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+                    <line x1="12" y1="20" x2="12.01" y2="20" />
                   </svg>
                 </span>
                 <!-- Control Center -->
                 <span class="mac-icon-item" title="Control Center">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="4" y1="8" x2="20" y2="8"/>
-                    <line x1="4" y1="16" x2="20" y2="16"/>
-                    <circle cx="8" cy="8" r="2.5" fill="currentColor"/>
-                    <circle cx="16" cy="16" r="2.5" fill="currentColor"/>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="8" x2="20" y2="8" />
+                    <line x1="4" y1="16" x2="20" y2="16" />
+                    <circle cx="8" cy="8" r="2.5" fill="currentColor" />
+                    <circle cx="16" cy="16" r="2.5" fill="currentColor" />
                   </svg>
                 </span>
                 <!-- Battery -->
                 <span class="mac-battery" title="Battery: 100%">
                   <svg width="22" height="11" viewBox="0 0 26 13" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <rect x="1" y="1" width="21" height="11" rx="3"/>
-                    <rect x="3" y="3" width="14" height="7" rx="1.5" fill="#10B981" stroke="none"/>
-                    <path d="M24 4.5v4" stroke-linecap="round"/>
+                    <rect x="1" y="1" width="21" height="11" rx="3" />
+                    <rect x="3" y="3" width="14" height="7" rx="1.5" fill="#10B981" stroke="none" />
+                    <path d="M24 4.5v4" stroke-linecap="round" />
                   </svg>
                   <span>100%</span>
                 </span>
@@ -1123,67 +1166,84 @@
           <div class="demo-steps">
             <div class="step-card">
               <div class="step-badge" style="color: #f59e0b;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-                  <line x1="1" y1="1" x2="23" y2="23"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
                 </svg>
               </div>
               <h4>Clean Inline Hiding</h4>
-              <p>Tuck away background icons directly inside your top menu bar. No secondary floating windows or screen clutter.</p>
+              <p>Tuck away background icons directly inside your top menu bar. No secondary floating windows or screen
+                clutter.</p>
             </div>
 
             <div class="step-card">
               <div class="step-badge" style="color: #60a5fa;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="7" height="7" rx="1.5"/>
-                  <rect x="14" y="3" width="7" height="7" rx="1.5"/>
-                  <rect x="14" y="14" width="7" height="7" rx="1.5"/>
-                  <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                  <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                  <rect x="3" y="14" width="7" height="7" rx="1.5" />
                 </svg>
               </div>
               <h4>Select Hidden Items</h4>
-              <p>Choose which apps to hide using the Item Manager in <b>Settings</b>, or drag icons directly in your menu bar.</p>
+              <p>Choose which apps to hide using the Item Manager in <b>Settings</b>, or drag icons directly in your
+                menu bar.</p>
             </div>
 
             <div class="step-card">
               <div class="step-badge" style="color: #ffffff;">
                 <svg width="24" height="12" viewBox="0 0 40 14" fill="currentColor">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z M9.88 11.31 C5.69 11.31 3.38 8.44 3.38 4.35 C3.38 2.93 4.59 2.23 7.26 2.23 C12.93 2.23 15.73 3.33 15.73 5.47 C15.73 8.71 13.57 11.31 9.88 11.31 Z M29.37 11.31 C25.68 11.31 23.51 8.71 23.51 5.47 C23.51 3.33 26.30 2.23 31.97 2.23 C34.66 2.23 35.86 2.93 35.86 4.35 C35.86 8.44 33.54 11.31 29.37 11.31 Z"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M19.62 4.75 C20.05 4.75 20.44 5.00 20.64 5.47 L22.02 8.50 C23.53 11.80 26.32 13.22 29.38 13.22 C33.85 13.22 37.00 10.47 37.72 5.63 L37.96 4.04 C38.21 2.33 39.23 1.80 39.23 1.05 C39.23 0.41 38.76 0.00 37.88 0.00 C33.89 0.00 30.27 0.19 28.10 0.52 C23.56 1.19 21.80 2.35 19.62 2.35 C17.44 2.35 15.66 1.19 11.13 0.52 C8.98 0.19 5.34 0.00 1.36 0.00 C0.48 0.00 0.00 0.41 0.00 1.05 C0.00 1.80 1.02 2.33 1.29 4.04 L1.52 5.63 C2.24 10.47 5.38 13.22 9.86 13.22 C12.92 13.22 15.70 11.80 17.21 8.50 L18.59 5.47 C18.80 5.00 19.18 4.75 19.62 4.75 Z M9.88 11.31 C5.69 11.31 3.38 8.44 3.38 4.35 C3.38 2.93 4.59 2.23 7.26 2.23 C12.93 2.23 15.73 3.33 15.73 5.47 C15.73 8.71 13.57 11.31 9.88 11.31 Z M29.37 11.31 C25.68 11.31 23.51 8.71 23.51 5.47 C23.51 3.33 26.30 2.23 31.97 2.23 C34.66 2.23 35.86 2.93 35.86 4.35 C35.86 8.44 33.54 11.31 29.37 11.31 Z" />
                 </svg>
               </div>
               <h4>Toggle With Glasses</h4>
-              <p>Click the BarBoss glasses icon or press <kbd class="kbd-inline">⌘</kbd><kbd class="kbd-inline">⇧</kbd><kbd class="kbd-inline">B</kbd> to collapse or reveal them instantly.</p>
+              <p>Click the BarBoss icon, or use the shortcut to collapse or reveal instantly.</p>
+              <div class="shortcut-row">
+                <kbd class="kbd-inline">⌃</kbd><kbd class="kbd-inline">⌥</kbd><kbd class="kbd-inline">⌘</kbd><kbd
+                  class="kbd-inline">B</kbd>
+              </div>
             </div>
 
             <div class="step-card">
               <div class="step-badge" style="color: #38bdf8;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                 </svg>
               </div>
               <h4>Featherweight & Fast</h4>
-              <p>Built 100% natively in Swift & SwiftUI. Consumes near 0% CPU and minimal RAM, keeping your battery lasting all day.</p>
+              <p>Built 100% natively in Swift & SwiftUI. Consumes near 0% CPU and minimal RAM, keeping your battery
+                lasting all day.</p>
             </div>
 
             <div class="step-card">
               <div class="step-badge" style="color: #34d399;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                  <path d="m9 12 2 2 4-4"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <path d="m9 12 2 2 4-4" />
                 </svg>
               </div>
               <h4>100% Private & Offline</h4>
-              <p>Zero telemetry, no analytics, and no background tracking. Your preferences and apps stay strictly on your Mac.</p>
+              <p>Zero telemetry, no analytics, and no background tracking. Your preferences and apps stay strictly on
+                your Mac.</p>
             </div>
 
             <div class="step-card">
               <div class="step-badge" style="color: #a78bfa;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z"/>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
                 </svg>
               </div>
               <h4>Sparkle Updates</h4>
-              <p>Effortless background updates powered by Sparkle 2. Free, open-source, and never tied to subscriptions or paywalls.</p>
+              <p>Effortless background updates powered by Sparkle 2. Free, open-source, and never tied to subscriptions
+                or paywalls.</p>
             </div>
           </div>
         </div>
@@ -1197,6 +1257,7 @@
     <div class="links">
       <a href="https://github.com/artemsvit/barboss" target="_blank">GitHub</a>
       <a href="https://github.com/artemsvit/barboss/releases" target="_blank">Releases</a>
+      <a href="/privacy.html">Privacy</a>
       <span>Developed by <a href="https://artsvit.com" target="_blank" rel="noopener">Artem Svitelskyi</a></span>
     </div>
   </footer>
@@ -1280,4 +1341,5 @@
   </script>
 
 </body>
+
 </html>

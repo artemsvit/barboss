@@ -15,12 +15,14 @@ public struct SettingsView: View {
                 .tabItem {
                     Label("General", systemImage: "gearshape")
                 }
-            
-            PermissionsTab()
-                .tabItem {
-                    Label("Permissions", systemImage: "lock.shield")
-                }
-            
+
+            if MenuBarManager.supportsAutomaticItemSelection {
+                PermissionsTab()
+                    .tabItem {
+                        Label("Permissions", systemImage: "lock.shield")
+                    }
+            }
+
             HotkeysSettingsTab()
                 .tabItem {
                     Label("Hotkeys", systemImage: "keyboard")

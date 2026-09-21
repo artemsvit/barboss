@@ -105,8 +105,9 @@ public final class Preferences: ObservableObject {
         let savedSeparatorStyle = defaults.string(forKey: Keys.separatorStyle) ?? SeparatorStyle.pipe.rawValue
         self.separatorStyle = SeparatorStyle(rawValue: savedSeparatorStyle) ?? .pipe
         
-        // Default hotkey: Command + Shift + B (B = keyCode 11)
-        self.hotkeyModifiers = defaults.object(forKey: Keys.hotkeyModifiers) != nil ? UInt(defaults.integer(forKey: Keys.hotkeyModifiers)) : (NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
+        // Default hotkey: Control + Option + Command + B (B = keyCode 11)
+        // Avoids conflicting with the system/browser "Show/Hide Bookmarks Bar" shortcut (⌘⇧B).
+        self.hotkeyModifiers = defaults.object(forKey: Keys.hotkeyModifiers) != nil ? UInt(defaults.integer(forKey: Keys.hotkeyModifiers)) : (NSEvent.ModifierFlags.control.rawValue | NSEvent.ModifierFlags.option.rawValue | NSEvent.ModifierFlags.command.rawValue)
         self.hotkeyKeyCode = defaults.object(forKey: Keys.hotkeyKeyCode) != nil ? UInt16(defaults.integer(forKey: Keys.hotkeyKeyCode)) : 11
         
         self.hiddenItemIdentifiers = defaults.stringArray(forKey: Keys.hiddenItemIdentifiers) ?? []

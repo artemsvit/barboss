@@ -14,25 +14,6 @@ struct LegacyMenuBarSetupView: View {
                     .multilineTextAlignment(.center)
             }
 
-            HStack(spacing: 12) {
-                iconGroup(symbols: ["cloud.fill", "bolt.fill", "bell.fill"], label: "Hidden")
-
-                Text("|")
-                    .font(.system(size: 28, weight: .light))
-                    .foregroundColor(.orange)
-
-                iconGroup(symbols: ["wifi", "speaker.wave.2.fill"], label: "Always visible")
-
-                Image(systemName: "sunglasses.fill")
-                    .font(.system(size: 19, weight: .semibold))
-                    .foregroundColor(.orange)
-                    .accessibilityLabel("BarBoss glasses")
-            }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 14)
-            .background(Color.secondary.opacity(0.07))
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-
             VStack(alignment: .leading, spacing: 10) {
                 instruction(1, "Click the BarBoss glasses to reveal the separator.")
                 instruction(2, "Hold Command (⌘), then drag every icon you want hidden to the left of the | separator.")
@@ -66,21 +47,6 @@ struct LegacyMenuBarSetupView: View {
             Text(text)
                 .font(.system(size: 12))
                 .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private func iconGroup(symbols: [String], label: String) -> some View {
-        VStack(spacing: 5) {
-            HStack(spacing: 8) {
-                ForEach(symbols, id: \.self) { symbol in
-                    Image(systemName: symbol)
-                        .font(.system(size: 14, weight: .medium))
-                        .frame(width: 18, height: 18)
-                }
-            }
-            Text(label)
-                .font(.system(size: 9, weight: .medium))
-                .foregroundColor(.secondary)
         }
     }
 }

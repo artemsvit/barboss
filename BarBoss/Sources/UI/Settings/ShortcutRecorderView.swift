@@ -18,7 +18,7 @@ public struct ShortcutRecorderView: View {
     @State private var isHovering = false
     
     private var isCustomShortcut: Bool {
-        prefs.hotkeyKeyCode != 11 || prefs.hotkeyModifiers != (NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
+        prefs.hotkeyKeyCode != 11 || prefs.hotkeyModifiers != (NSEvent.ModifierFlags.control.rawValue | NSEvent.ModifierFlags.option.rawValue | NSEvent.ModifierFlags.command.rawValue)
     }
     
     public var body: some View {
@@ -84,7 +84,7 @@ public struct ShortcutRecorderView: View {
                 }
                 .buttonStyle(.bordered)
                 .controlSize(.small)
-                .help("Reset to default shortcut (⇧⌘B)")
+                .help("Reset to default shortcut (⌃⌥⌘B)")
             }
         }
         .onDisappear {
@@ -132,7 +132,7 @@ public struct ShortcutRecorderView: View {
     }
     
     private func resetToDefault() {
-        prefs.hotkeyModifiers = UInt(NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue)
+        prefs.hotkeyModifiers = UInt(NSEvent.ModifierFlags.control.rawValue | NSEvent.ModifierFlags.option.rawValue | NSEvent.ModifierFlags.command.rawValue)
         prefs.hotkeyKeyCode = 11 // 'B'
         HotkeyManager.shared.start()
     }
